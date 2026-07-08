@@ -7,8 +7,7 @@
   export let mode: SpectrumMode = 'emission';
   export let title = 'Espectro';
 
-  const width = 940;
-  const x = d3.scaleLinear().domain([320, 780]).range([0, width]);
+  const x = d3.scaleLinear().domain([320, 780]).range([0, 100]);
 
   $: ticks = x.ticks(10);
   $: sortedLines = [...lines].sort((a, b) => a.wavelength_nm - b.wavelength_nm);
@@ -18,7 +17,7 @@
   }
 
   function lineHeight(line: SpectralLine): number {
-    return 38 + line.intensity * 82;
+    return 38 + line.intensity * 98;
   }
 
   function lineOpacity(line: SpectralLine): number {
@@ -27,7 +26,7 @@
 </script>
 
 <section class="spectrum-card">
-  <div class="section-title-row">
+  <div class="section-title-row compact">
     <div>
       <p class="eyebrow">Longitud de onda</p>
       <h2>{title}</h2>
@@ -44,11 +43,11 @@
   <div class:absorption={mode === 'absorption'} class:emission={mode === 'emission'} class="spectrum-stage">
     <div
       class="visible-window"
-      style={`left:${leftPosition(VISIBLE_MIN_NM)}px;width:${leftPosition(VISIBLE_MAX_NM) - leftPosition(VISIBLE_MIN_NM)}px;`}
+      style={`left:${leftPosition(VISIBLE_MIN_NM)}%;width:${leftPosition(VISIBLE_MAX_NM) - leftPosition(VISIBLE_MIN_NM)}%;`}
     ></div>
 
     {#each ticks as tick}
-      <div class="tick" style={`left:${leftPosition(tick)}px;`}>
+      <div class="tick" style={`left:${leftPosition(tick)}%;`}>
         <span>{tick}</span>
       </div>
     {/each}
@@ -58,7 +57,7 @@
         class:outside-visible={!line.visible}
         class="spectral-line"
         style={`
-          left:${leftPosition(line.wavelength_nm)}px;
+          left:${leftPosition(line.wavelength_nm)}%;
           height:${lineHeight(line)}px;
           opacity:${lineOpacity(line)};
           --line-color:${mode === 'emission' ? line.approximate_color : '#101522'};
