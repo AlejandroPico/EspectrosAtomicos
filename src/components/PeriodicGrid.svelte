@@ -29,19 +29,24 @@
 
   <div class="periodic-grid">
     {#each elements as element}
-      <button
+      <article
         class:active={selectedSymbol === element.symbol}
         class:compared={comparedSymbols.includes(element.symbol)}
         class="element-cell category-{element.category.replaceAll(' ', '-')}"
         style={`grid-column:${element.group};grid-row:${element.period};`}
-        type="button"
-        on:click={() => dispatch('select', element.symbol)}
-        aria-label={`Abrir ficha de ${element.name_es}`}
       >
-        <span class="atomic-number">{element.atomic_number}</span>
-        <strong>{element.symbol}</strong>
-        <small>{element.name_es}</small>
-        <em>{countVisibleLines(element.lines)} líneas visibles</em>
+        <button
+          class="element-open-button"
+          type="button"
+          on:click={() => dispatch('select', element.symbol)}
+          aria-label={`Abrir ficha de ${element.name_es}`}
+        >
+          <span class="atomic-number">{element.atomic_number}</span>
+          <strong>{element.symbol}</strong>
+          <small>{element.name_es}</small>
+          <em>{countVisibleLines(element.lines)} líneas visibles</em>
+        </button>
+
         <button
           class="compare-dot"
           type="button"
@@ -51,7 +56,7 @@
         >
           {comparedSymbols.includes(element.symbol) ? '✓' : '+'}
         </button>
-      </button>
+      </article>
     {/each}
   </div>
 </section>
