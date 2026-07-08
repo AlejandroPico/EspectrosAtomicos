@@ -1,15 +1,27 @@
 <script lang="ts">
   import * as d3 from 'd3';
-  import type { ElementWithLines } from '../lib/atomicTypes';
+  import type { ElementWithLines, SpectralLine } from '../lib/atomicTypes';
   import { formatNm } from '../lib/wavelengthColor';
 
   export let selected: ElementWithLines[] = [];
 
-  const width = 900;
-  const x = d3.scaleLinear().domain([320, 780]).range([0, width]);
+  const x = d3.scaleLinear().domain([320, 780]).range([0, 100]);
+
+  $: mergedLines = selected.flatMap((element) =>
+    element.lines.map((line) => ({
+      ...line,
+      ownerSymbol: element.symbol,
+      ownerName: element.name_es
+    }))
+  );
 
   function lineLeft(wavelength: number): number {
     return x(wavelength);
+  }
+
+  function lineTitle(line: SpectralLine & { ownerSymbol?: string; ownerName?: string }): string {
+    const owner = line.ownerSymbol ? `${line.ownerSymbol} · ` : '';
+    return `${owner}${line.label}: ${formatNm(line.wavelength_nm)}`;
   }
 </script>
 
@@ -19,12 +31,12 @@
       <p class="eyebrow">Comparador</p>
       <h2>Firmas superpuestas</h2>
     </div>
-    <span class="range-pill">{selected.length}/4</span>
+    <span class="range-pill">{selected.length} seleccionados</span>
   </div>
 
   {#if selected.length === 0}
     <p class="empty-copy">
-      Usa el botón <strong>+</strong> de la tabla periódica para añadir elementos al comparador.
+      Usa el botón <strong>+</strong> de cada elemento para añadirlo al comparador.
     </p>
   {:else}
     <div class="compare-stack">
@@ -38,16 +50,37 @@
             {#each element.lines as line}
               <span
                 style={`
-                  left:${lineLeft(line.wavelength_nm)}px;
-                  opacity:${0.35 + line.intensity * 0.65};
+                  left:${lineLeft(line.wavelength_nm)}%;
+                  opacity:${0.28 + line.intensity * 0.72};
                   --line-color:${line.approximate_color};
                 `}
-                title={`${line.label}: ${formatNm(line.wavelength_nm)}`}
+                title={lineTitle(line)}
               ></span>
             {/each}
           </div>
         </article>
       {/each}
+
+      {#if selected.length > 1}
+        <article class="fusion-row">
+          <header>
+            <strong>Σ</strong>
+            <span>Fusión espectral</span>
+          </header>
+          <div class="mini-spectrum fusion-spectrum">
+            {#each mergedLines as line}
+              <span
+                style={`
+                  left:${lineLeft(line.wavelength_nm)}%;
+                  opacity:${0.22 + line.intensity * 0.68};
+                  --line-color:${line.approximate_color};
+                `}
+                title={lineTitle(line)}
+              ></span>
+            {/each}
+          </div>
+        </article>
+      {/if}
     </div>
   {/if}
 </section>
