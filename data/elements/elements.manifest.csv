@@ -1,0 +1,119 @@
+atomic_number,symbol,name_en,name_es,group,period,block,category,folder
+1,H,Hydrogen,Hidrógeno,1,1,s,nonmetal,001-H-hydrogen
+2,He,Helium,Helio,18,1,s,noble gas,002-He-helium
+3,Li,Lithium,Litio,1,2,s,alkali metal,003-Li-lithium
+4,Be,Beryllium,Berilio,2,2,s,alkaline earth metal,004-Be-beryllium
+5,B,Boron,Boro,13,2,p,metalloid,005-B-boron
+6,C,Carbon,Carbono,14,2,p,nonmetal,006-C-carbon
+7,N,Nitrogen,Nitrógeno,15,2,p,nonmetal,007-N-nitrogen
+8,O,Oxygen,Oxígeno,16,2,p,nonmetal,008-O-oxygen
+9,F,Fluorine,Flúor,17,2,p,halogen,009-F-fluorine
+10,Ne,Neon,Neón,18,2,p,noble gas,010-Ne-neon
+11,Na,Sodium,Sodio,1,3,s,alkali metal,011-Na-sodium
+12,Mg,Magnesium,Magnesio,2,3,s,alkaline earth metal,012-Mg-magnesium
+13,Al,Aluminium,Aluminio,13,3,p,post-transition metal,013-Al-aluminium
+14,Si,Silicon,Silicio,14,3,p,metalloid,014-Si-silicon
+15,P,Phosphorus,Fósforo,15,3,p,nonmetal,015-P-phosphorus
+16,S,Sulfur,Azufre,16,3,p,nonmetal,016-S-sulfur
+17,Cl,Chlorine,Cloro,17,3,p,halogen,017-Cl-chlorine
+18,Ar,Argon,Argón,18,3,p,noble gas,018-Ar-argon
+19,K,Potassium,Potasio,1,4,s,alkali metal,019-K-potassium
+20,Ca,Calcium,Calcio,2,4,s,alkaline earth metal,020-Ca-calcium
+21,Sc,Scandium,Escandio,3,4,d,transition metal,021-Sc-scandium
+22,Ti,Titanium,Titanio,4,4,d,transition metal,022-Ti-titanium
+23,V,Vanadium,Vanadio,5,4,d,transition metal,023-V-vanadium
+24,Cr,Chromium,Cromo,6,4,d,transition metal,024-Cr-chromium
+25,Mn,Manganese,Manganeso,7,4,d,transition metal,025-Mn-manganese
+26,Fe,Iron,Hierro,8,4,d,transition metal,026-Fe-iron
+27,Co,Cobalt,Cobalto,9,4,d,transition metal,027-Co-cobalt
+28,Ni,Nickel,Níquel,10,4,d,transition metal,028-Ni-nickel
+29,Cu,Copper,Cobre,11,4,d,transition metal,029-Cu-copper
+30,Zn,Zinc,Zinc,12,4,d,transition metal,030-Zn-zinc
+31,Ga,Gallium,Galio,13,4,p,post-transition metal,031-Ga-gallium
+32,Ge,Germanium,Germanio,14,4,p,metalloid,032-Ge-germanium
+33,As,Arsenic,Arsénico,15,4,p,metalloid,033-As-arsenic
+34,Se,Selenium,Selenio,16,4,p,nonmetal,034-Se-selenium
+35,Br,Bromine,Bromo,17,4,p,halogen,035-Br-bromine
+36,Kr,Krypton,Kriptón,18,4,p,noble gas,036-Kr-krypton
+37,Rb,Rubidium,Rubidio,1,5,s,alkali metal,037-Rb-rubidium
+38,Sr,Strontium,Estroncio,2,5,s,alkaline earth metal,038-Sr-strontium
+39,Y,Yttrium,Itrio,3,5,d,transition metal,039-Y-yttrium
+40,Zr,Zirconium,Circonio,4,5,d,transition metal,040-Zr-zirconium
+41,Nb,Niobium,Niobio,5,5,d,transition metal,041-Nb-niobium
+42,Mo,Molybdenum,Molibdeno,6,5,d,transition metal,042-Mo-molybdenum
+43,Tc,Technetium,Tecnecio,7,5,d,transition metal,043-Tc-technetium
+44,Ru,Ruthenium,Rutenio,8,5,d,transition metal,044-Ru-ruthenium
+45,Rh,Rhodium,Rodio,9,5,d,transition metal,045-Rh-rhodium
+46,Pd,Palladium,Paladio,10,5,d,transition metal,046-Pd-palladium
+47,Ag,Silver,Plata,11,5,d,transition metal,047-Ag-silver
+48,Cd,Cadmium,Cadmio,12,5,d,transition metal,048-Cd-cadmium
+49,In,Indium,Indio,13,5,p,post-transition metal,049-In-indium
+50,Sn,Tin,Estaño,14,5,p,post-transition metal,050-Sn-tin
+51,Sb,Antimony,Antimonio,15,5,p,metalloid,051-Sb-antimony
+52,Te,Tellurium,Telurio,16,5,p,metalloid,052-Te-tellurium
+53,I,Iodine,Yodo,17,5,p,halogen,053-I-iodine
+54,Xe,Xenon,Xenón,18,5,p,noble gas,054-Xe-xenon
+55,Cs,Caesium,Cesio,1,6,s,alkali metal,055-Cs-caesium
+56,Ba,Barium,Bario,2,6,s,alkaline earth metal,056-Ba-barium
+57,La,Lanthanum,Lantano,3,6,f,lanthanide,057-La-lanthanum
+58,Ce,Cerium,Cerio,3,6,f,lanthanide,058-Ce-cerium
+59,Pr,Praseodymium,Praseodimio,3,6,f,lanthanide,059-Pr-praseodymium
+60,Nd,Neodymium,Neodimio,3,6,f,lanthanide,060-Nd-neodymium
+61,Pm,Promethium,Prometio,3,6,f,lanthanide,061-Pm-promethium
+62,Sm,Samarium,Samario,3,6,f,lanthanide,062-Sm-samarium
+63,Eu,Europium,Europio,3,6,f,lanthanide,063-Eu-europium
+64,Gd,Gadolinium,Gadolinio,3,6,f,lanthanide,064-Gd-gadolinium
+65,Tb,Terbium,Terbio,3,6,f,lanthanide,065-Tb-terbium
+66,Dy,Dysprosium,Disprosio,3,6,f,lanthanide,066-Dy-dysprosium
+67,Ho,Holmium,Holmio,3,6,f,lanthanide,067-Ho-holmium
+68,Er,Erbium,Erbio,3,6,f,lanthanide,068-Er-erbium
+69,Tm,Thulium,Tulio,3,6,f,lanthanide,069-Tm-thulium
+70,Yb,Ytterbium,Iterbio,3,6,f,lanthanide,070-Yb-ytterbium
+71,Lu,Lutetium,Lutecio,3,6,d,lanthanide,071-Lu-lutetium
+72,Hf,Hafnium,Hafnio,4,6,d,transition metal,072-Hf-hafnium
+73,Ta,Tantalum,Tántalo,5,6,d,transition metal,073-Ta-tantalum
+74,W,Tungsten,Wolframio,6,6,d,transition metal,074-W-tungsten
+75,Re,Rhenium,Renio,7,6,d,transition metal,075-Re-rhenium
+76,Os,Osmium,Osmio,8,6,d,transition metal,076-Os-osmium
+77,Ir,Iridium,Iridio,9,6,d,transition metal,077-Ir-iridium
+78,Pt,Platinum,Platino,10,6,d,transition metal,078-Pt-platinum
+79,Au,Gold,Oro,11,6,d,transition metal,079-Au-gold
+80,Hg,Mercury,Mercurio,12,6,d,transition metal,080-Hg-mercury
+81,Tl,Thallium,Talio,13,6,p,post-transition metal,081-Tl-thallium
+82,Pb,Lead,Plomo,14,6,p,post-transition metal,082-Pb-lead
+83,Bi,Bismuth,Bismuto,15,6,p,post-transition metal,083-Bi-bismuth
+84,Po,Polonium,Polonio,16,6,p,post-transition metal,084-Po-polonium
+85,At,Astatine,Astato,17,6,p,halogen,085-At-astatine
+86,Rn,Radon,Radón,18,6,p,noble gas,086-Rn-radon
+87,Fr,Francium,Francio,1,7,s,alkali metal,087-Fr-francium
+88,Ra,Radium,Radio,2,7,s,alkaline earth metal,088-Ra-radium
+89,Ac,Actinium,Actinio,3,7,f,actinide,089-Ac-actinium
+90,Th,Thorium,Torio,3,7,f,actinide,090-Th-thorium
+91,Pa,Protactinium,Protactinio,3,7,f,actinide,091-Pa-protactinium
+92,U,Uranium,Uranio,3,7,f,actinide,092-U-uranium
+93,Np,Neptunium,Neptunio,3,7,f,actinide,093-Np-neptunium
+94,Pu,Plutonium,Plutonio,3,7,f,actinide,094-Pu-plutonium
+95,Am,Americium,Americio,3,7,f,actinide,095-Am-americium
+96,Cm,Curium,Curio,3,7,f,actinide,096-Cm-curium
+97,Bk,Berkelium,Berkelio,3,7,f,actinide,097-Bk-berkelium
+98,Cf,Californium,Californio,3,7,f,actinide,098-Cf-californium
+99,Es,Einsteinium,Einstenio,3,7,f,actinide,099-Es-einsteinium
+100,Fm,Fermium,Fermio,3,7,f,actinide,100-Fm-fermium
+101,Md,Mendelevium,Mendelevio,3,7,f,actinide,101-Md-mendelevium
+102,No,Nobelium,Nobelio,3,7,f,actinide,102-No-nobelium
+103,Lr,Lawrencium,Lawrencio,3,7,d,actinide,103-Lr-lawrencium
+104,Rf,Rutherfordium,Rutherfordio,4,7,d,transition metal,104-Rf-rutherfordium
+105,Db,Dubnium,Dubnio,5,7,d,transition metal,105-Db-dubnium
+106,Sg,Seaborgium,Seaborgio,6,7,d,transition metal,106-Sg-seaborgium
+107,Bh,Bohrium,Bohrio,7,7,d,transition metal,107-Bh-bohrium
+108,Hs,Hassium,Hassio,8,7,d,transition metal,108-Hs-hassium
+109,Mt,Meitnerium,Meitnerio,9,7,d,unknown,109-Mt-meitnerium
+110,Ds,Darmstadtium,Darmstadtio,10,7,d,unknown,110-Ds-darmstadtium
+111,Rg,Roentgenium,Roentgenio,11,7,d,unknown,111-Rg-roentgenium
+112,Cn,Copernicium,Copernicio,12,7,d,transition metal,112-Cn-copernicium
+113,Nh,Nihonium,Nihonio,13,7,p,unknown,113-Nh-nihonium
+114,Fl,Flerovium,Flerovio,14,7,p,post-transition metal,114-Fl-flerovium
+115,Mc,Moscovium,Moscovio,15,7,p,unknown,115-Mc-moscovium
+116,Lv,Livermorium,Livermorio,16,7,p,unknown,116-Lv-livermorium
+117,Ts,Tennessine,Teneso,17,7,p,halogen,117-Ts-tennessine
+118,Og,Oganesson,Oganesón,18,7,p,noble gas,118-Og-oganesson
