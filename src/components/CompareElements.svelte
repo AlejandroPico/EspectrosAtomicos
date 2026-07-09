@@ -1,9 +1,15 @@
 <script lang="ts">
+  import { createEventDispatcher } from 'svelte';
   import * as d3 from 'd3';
   import type { ElementWithLines, SpectralLine } from '../lib/atomicTypes';
   import { formatNm } from '../lib/wavelengthColor';
 
   export let selected: ElementWithLines[] = [];
+
+  const dispatch = createEventDispatcher<{
+    remove: string;
+    clear: void;
+  }>();
 
   const x = d3.scaleLinear().domain([320, 780]).range([0, 100]);
 
@@ -28,6 +34,14 @@
 <section class="compare-card">
   <div class="compare-grip" aria-hidden="true"></div>
 
+  <header class="compare-toolbar">
+    <div>
+      <p class="eyebrow">Comparador</p>
+      <strong>{selected.length} elementos</strong>
+    </div>
+    <button type="button" on:click={() => dispatch('clear')}>Limpiar</button>
+  </header>
+
   <div class="compare-stack">
     {#each selected as element}
       <article>
@@ -47,6 +61,14 @@
             ></span>
           {/each}
         </div>
+        <button
+          class="compare-remove"
+          type="button"
+          on:click={() => dispatch('remove', element.symbol)}
+          aria-label={`Quitar ${element.name_es} del comparador`}
+        >
+          ×
+        </button>
       </article>
     {/each}
 
