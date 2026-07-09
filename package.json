@@ -1,9 +1,9 @@
 {
-  "name": "espectros-atomicos",
+  "name": "tabla-elementos",
   "private": true,
   "version": "0.1.0",
   "type": "module",
-  "description": "Aplicación científica estática para explorar líneas de emisión y absorción de espectros atómicos.",
+  "description": "Tabla periódica ampliada y estática para explorar elementos, espectros, niveles, propiedades y datos científicos.",
   "scripts": {
     "dev": "npm run build:data && vite --host 0.0.0.0",
     "build:data": "python scripts/build_data.py",
