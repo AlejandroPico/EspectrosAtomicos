@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Genera el dataset estático de Espectros Atómicos.
+"""Genera el dataset estático de la tabla periódica ampliada.
 
 La aplicación final no consulta servicios externos. Este script trabaja solo con
 CSV locales versionados en el repositorio y produce un JSON optimizado para la web.
@@ -9,6 +9,7 @@ from __future__ import annotations
 
 import csv
 import json
+import re
 from dataclasses import asdict, dataclass
 from pathlib import Path
 from typing import Any
@@ -16,11 +17,31 @@ from typing import Any
 
 ROOT = Path(__file__).resolve().parents[1]
 RAW_DIR = ROOT / "data" / "raw"
+ELEMENTS_DIR = ROOT / "data" / "elements"
+IMPORT_NIST_DIR = ROOT / "data" / "import" / "nist"
+MANIFEST_PATH = ELEMENTS_DIR / "elements.manifest.csv"
 PROCESSED_DIR = ROOT / "data" / "processed"
 PUBLIC_DATA_DIR = ROOT / "public" / "data"
 
 VISIBLE_MIN_NM = 380.0
 VISIBLE_MAX_NM = 750.0
+MAX_IMPORTED_LINES_PER_ELEMENT = 700
+
+CATEGORY_ES = {
+    "nonmetal": "no metal",
+    "noble gas": "gas noble",
+    "alkali metal": "metal alcalino",
+    "alkaline earth metal": "metal alcalinotérreo",
+    "metalloid": "metaloide",
+    "halogen": "halógeno",
+    "post-transition metal": "metal post-transición",
+    "transition metal": "metal de transición",
+    "lanthanide": "lantánido",
+    "actinide": "actínido",
+    "unknown": "desconocido",
+}
+
+NIST_FILENAME_RE = re.compile(r"^(?P<number>\d{3})_(?P<symbol>[A-Z][a-z]?)_(?P<kind>espectro|niveles)\.csv$")
 
 
 @dataclass(frozen=True)
@@ -52,13 +73,27 @@ class SpectralLine:
     spectral_region: str
 
 
+@dataclass(frozen=True)
+class NistFileStatus:
+    file: str
+    path: str
+    present: bool
+    table_like: bool
+    status: str
+    columns: list[str]
+    row_count: int
+    preview: str
+    notes: str
+
+
+@dataclass(frozen=True)
+class NistElementStatus:
+    espectro: NistFileStatus
+    niveles: NistFileStatus
+    imported_line_count: int
+
+
 def wavelength_to_hex(wavelength_nm: float) -> str:
-    """Aproximación RGB educativa para el rango visible.
-
-    Fuera de 380-750 nm devolvemos un gris técnico porque UV/IR no tienen color
-    visible directo para el ojo humano.
-    """
-
     gamma = 0.8
     wavelength = float(wavelength_nm)
 
@@ -107,78 +142,329 @@ def spectral_region(wavelength_nm: float) -> str:
     return "visible"
 
 
+def normalize_category(category: str) -> str:
+    return CATEGORY_ES.get(category.strip().lower(), category.strip())
+
+
+def display_position(atomic_number: int, group: int, period: int) -> tuple[int, int]:
+    """Coloca lantánidos y actínidos en filas separadas para que sean visibles."""
+
+    if 58 <= atomic_number <= 71:
+        return atomic_number - 54, 8
+    if 90 <= atomic_number <= 103:
+        return atomic_number - 86, 9
+    return group, period
+
+
+def load_raw_summaries() -> dict[str, str]:
+    path = RAW_DIR / "elements.csv"
+    if not path.exists():
+        return {}
+
+    summaries: dict[str, str] = {}
+    with path.open(encoding="utf-8", newline="") as handle:
+        for row in csv.DictReader(handle):
+            summaries[row["symbol"]] = row.get("summary", "")
+    return summaries
+
+
 def load_elements() -> dict[str, Element]:
+    if not MANIFEST_PATH.exists():
+        raise FileNotFoundError(f"No existe el manifiesto maestro: {MANIFEST_PATH}")
+
+    summaries = load_raw_summaries()
     elements: dict[str, Element] = {}
 
-    with (RAW_DIR / "elements.csv").open(encoding="utf-8", newline="") as handle:
+    with MANIFEST_PATH.open(encoding="utf-8", newline="") as handle:
         for row in csv.DictReader(handle):
+            atomic_number = int(row["atomic_number"])
+            group, period = display_position(atomic_number, int(row["group"]), int(row["period"]))
+            symbol = row["symbol"]
             element = Element(
-                symbol=row["symbol"],
+                symbol=symbol,
                 name_es=row["name_es"],
                 name_en=row["name_en"],
-                atomic_number=int(row["atomic_number"]),
-                group=int(row["group"]),
-                period=int(row["period"]),
-                category=row["category"],
-                summary=row["summary"],
+                atomic_number=atomic_number,
+                group=group,
+                period=period,
+                category=normalize_category(row["category"]),
+                summary=summaries.get(
+                    symbol,
+                    f"Elemento químico {row['name_es']} ({symbol}), número atómico {atomic_number}.",
+                ),
             )
             elements[element.symbol] = element
 
     return elements
 
 
-def load_lines(elements: dict[str, Element]) -> list[SpectralLine]:
-    lines: list[SpectralLine] = []
+def parse_float(value: Any) -> float | None:
+    if value is None:
+        return None
+    text = str(value).replace(",", ".")
+    match = re.search(r"[-+]?\d+(?:\.\d+)?(?:[eE][-+]?\d+)?", text)
+    if not match:
+        return None
+    try:
+        return float(match.group(0))
+    except ValueError:
+        return None
 
-    with (RAW_DIR / "sample-lines.csv").open(encoding="utf-8", newline="") as handle:
+
+def load_sample_lines(elements: dict[str, Element]) -> list[SpectralLine]:
+    path = RAW_DIR / "sample-lines.csv"
+    if not path.exists():
+        return []
+
+    lines: list[SpectralLine] = []
+    with path.open(encoding="utf-8", newline="") as handle:
         for row in csv.DictReader(handle):
             symbol = row["element"]
             if symbol not in elements:
-                raise ValueError(f"La línea espectral usa un elemento desconocido: {symbol}")
+                continue
 
             wavelength = float(row["wavelength_nm"])
-            line = SpectralLine(
-                element=symbol,
-                species=row["species"],
-                wavelength_nm=wavelength,
-                intensity=float(row["intensity"]),
-                kind=row["kind"],
-                lower_level_ev=float(row["lower_level_ev"]),
-                upper_level_ev=float(row["upper_level_ev"]),
-                transition=row["transition"],
-                label=row["label"],
-                source_note=row["source_note"],
-                visible=VISIBLE_MIN_NM <= wavelength <= VISIBLE_MAX_NM,
-                approximate_color=wavelength_to_hex(wavelength),
-                spectral_region=spectral_region(wavelength),
+            lines.append(
+                SpectralLine(
+                    element=symbol,
+                    species=row["species"],
+                    wavelength_nm=wavelength,
+                    intensity=float(row["intensity"]),
+                    kind=row["kind"],
+                    lower_level_ev=float(row["lower_level_ev"]),
+                    upper_level_ev=float(row["upper_level_ev"]),
+                    transition=row["transition"],
+                    label=row["label"],
+                    source_note=row["source_note"],
+                    visible=VISIBLE_MIN_NM <= wavelength <= VISIBLE_MAX_NM,
+                    approximate_color=wavelength_to_hex(wavelength),
+                    spectral_region=spectral_region(wavelength),
+                )
             )
-            lines.append(line)
 
     return lines
 
 
+def expected_nist_filename(element: Element, kind: str) -> str:
+    return f"{element.atomic_number:03d}_{element.symbol}_{kind}.csv"
+
+
+def find_nist_file(element: Element, kind: str) -> Path | None:
+    filename = expected_nist_filename(element, kind)
+    element_folder = ELEMENTS_DIR / f"{element.atomic_number:03d}-{element.symbol}-{element.name_en.lower()}"
+
+    candidates = [
+        element_folder / filename,
+        IMPORT_NIST_DIR / filename,
+    ]
+
+    for candidate in candidates:
+        if candidate.exists():
+            return candidate
+    return None
+
+
+def analyze_csv(path: Path | None, expected_name: str) -> NistFileStatus:
+    if path is None:
+        return NistFileStatus(
+            file=expected_name,
+            path="",
+            present=False,
+            table_like=False,
+            status="missing",
+            columns=[],
+            row_count=0,
+            preview="",
+            notes="No se encontró archivo CSV para este bloque.",
+        )
+
+    columns: list[str] = []
+    row_count = 0
+    preview = ""
+    status = "valid_table"
+    table_like = True
+    notes = "CSV tabular detectado."
+
+    try:
+        with path.open("r", encoding="utf-8", errors="replace", newline="") as handle:
+            reader = csv.reader(handle)
+            header = next(reader, [])
+            columns = [cell.strip() for cell in header]
+
+            for index, row in enumerate(reader, start=1):
+                row_count = index
+                if not preview and row:
+                    preview = " | ".join(cell[:160] for cell in row[:4])[:500]
+
+    except csv.Error as error:
+        status = "csv_error"
+        table_like = False
+        notes = f"Error al leer CSV: {error}"
+
+    if len(columns) <= 1:
+        table_like = False
+        haystack = f"{' '.join(columns)} {preview}".lower()
+        if "newrelic" in haystack or "(()=>{var" in haystack or "javascript" in haystack:
+            status = "invalid_single_column_script"
+            notes = "El archivo existe, pero parece contener JavaScript de la página en una sola columna, no una tabla NIST limpia."
+        elif "<html" in haystack or "<!doctype" in haystack:
+            status = "invalid_html_export"
+            notes = "El archivo existe, pero parece ser HTML guardado como CSV."
+        elif row_count == 0:
+            status = "empty_or_header_only"
+            notes = "El archivo existe, pero no contiene filas de datos."
+        else:
+            status = "single_column_csv"
+            notes = "El archivo existe, pero solo tiene una columna; se requiere revisión manual del formato."
+
+    return NistFileStatus(
+        file=expected_name,
+        path=str(path.relative_to(ROOT)),
+        present=True,
+        table_like=table_like,
+        status=status,
+        columns=columns[:32],
+        row_count=row_count,
+        preview=preview,
+        notes=notes,
+    )
+
+
+def normalized_header_map(row: dict[str, str]) -> dict[str, str]:
+    return {key.lower().strip(): value for key, value in row.items() if key is not None}
+
+
+def pick_value(row: dict[str, str], needles: list[str]) -> str | None:
+    normalized = normalized_header_map(row)
+    for key, value in normalized.items():
+        compact = key.replace(" ", "").replace(".", "")
+        if any(needle in compact for needle in needles):
+            return value
+    return None
+
+
+def parse_nist_spectral_lines(element: Element, path: Path | None, status: NistFileStatus) -> list[SpectralLine]:
+    if path is None or not status.table_like:
+        return []
+
+    lines: list[SpectralLine] = []
+    try:
+        with path.open("r", encoding="utf-8", errors="replace", newline="") as handle:
+            for row in csv.DictReader(handle):
+                wavelength_raw = pick_value(row, ["wavelength", "ritz", "observed", "obs"])
+                wavelength = parse_float(wavelength_raw)
+                if wavelength is None:
+                    continue
+
+                intensity_raw = pick_value(row, ["intens", "relint", "rel"])
+                intensity = parse_float(intensity_raw) or 0.55
+                if intensity > 1:
+                    intensity = min(1.0, intensity / 1000 if intensity > 100 else intensity / 100)
+                intensity = max(0.08, min(1.0, intensity))
+
+                lower_raw = pick_value(row, ["lower", "ei"])
+                upper_raw = pick_value(row, ["upper", "ek"])
+                lower = parse_float(lower_raw) or 0.0
+                upper = parse_float(upper_raw) or 0.0
+
+                transition = pick_value(row, ["transition", "term", "config"]) or "Transición NIST"
+                species = pick_value(row, ["spectrum", "species", "sp"]) or f"{element.symbol} I"
+
+                lines.append(
+                    SpectralLine(
+                        element=element.symbol,
+                        species=species,
+                        wavelength_nm=wavelength,
+                        intensity=intensity,
+                        kind="emission",
+                        lower_level_ev=lower,
+                        upper_level_ev=upper,
+                        transition=transition,
+                        label=f"NIST {wavelength:.3f} nm",
+                        source_note="NIST ASD importado desde CSV local.",
+                        visible=VISIBLE_MIN_NM <= wavelength <= VISIBLE_MAX_NM,
+                        approximate_color=wavelength_to_hex(wavelength),
+                        spectral_region=spectral_region(wavelength),
+                    )
+                )
+
+                if len(lines) >= MAX_IMPORTED_LINES_PER_ELEMENT:
+                    break
+    except csv.Error:
+        return []
+
+    return lines
+
+
+def analyze_nist_for_element(element: Element) -> tuple[NistElementStatus, list[SpectralLine]]:
+    spectrum_name = expected_nist_filename(element, "espectro")
+    levels_name = expected_nist_filename(element, "niveles")
+    spectrum_path = find_nist_file(element, "espectro")
+    levels_path = find_nist_file(element, "niveles")
+
+    spectrum_status = analyze_csv(spectrum_path, spectrum_name)
+    levels_status = analyze_csv(levels_path, levels_name)
+    imported_lines = parse_nist_spectral_lines(element, spectrum_path, spectrum_status)
+
+    return (
+        NistElementStatus(
+            espectro=spectrum_status,
+            niveles=levels_status,
+            imported_line_count=len(imported_lines),
+        ),
+        imported_lines,
+    )
+
+
 def build_payload() -> dict[str, Any]:
     elements = load_elements()
-    lines = load_lines(elements)
+    sample_lines = load_sample_lines(elements)
 
     grouped_lines: dict[str, list[dict[str, Any]]] = {symbol: [] for symbol in elements}
+    nist_by_element: dict[str, dict[str, Any]] = {}
 
-    for line in sorted(lines, key=lambda item: (item.element, item.wavelength_nm)):
-        grouped_lines[line.element].append(asdict(line))
+    imported_total = 0
+    malformed_files = 0
+    present_files = 0
+
+    for element in sorted(elements.values(), key=lambda item: item.atomic_number):
+        nist_status, imported_lines = analyze_nist_for_element(element)
+        nist_by_element[element.symbol] = asdict(nist_status)
+        imported_total += len(imported_lines)
+
+        for file_status in (nist_status.espectro, nist_status.niveles):
+            if file_status.present:
+                present_files += 1
+            if file_status.present and not file_status.table_like:
+                malformed_files += 1
+
+        for line in imported_lines:
+            grouped_lines[element.symbol].append(asdict(line))
+
+    # Mantiene el dataset de muestra como respaldo visual mientras los CSV de NIST
+    # no estén normalizados a una tabla limpia.
+    for line in sorted(sample_lines, key=lambda item: (item.element, item.wavelength_nm)):
+        if not grouped_lines[line.element]:
+            grouped_lines[line.element].append(asdict(line))
 
     ordered_elements = sorted(elements.values(), key=lambda item: item.atomic_number)
 
     return {
         "metadata": {
-            "project": "Espectros Atómicos",
-            "dataset": "sample-v1",
-            "description": "Dataset local de muestra para validar arquitectura, visualización e interfaz.",
+            "project": "Tabla periódica ampliada",
+            "dataset": "elements-v2-nist-staging",
+            "description": "Dataset local con 118 elementos, estado de importación NIST y líneas de muestra como respaldo visual.",
             "external_runtime_requests": False,
             "visible_range_nm": [VISIBLE_MIN_NM, VISIBLE_MAX_NM],
             "generated_by": "scripts/build_data.py",
+            "source_layout": "data/elements + data/import/nist",
+            "nist_files_present": present_files,
+            "nist_files_malformed_or_non_tabular": malformed_files,
+            "nist_imported_spectral_lines": imported_total,
         },
         "elements": [asdict(element) for element in ordered_elements],
         "spectral_lines_by_element": grouped_lines,
+        "nist_by_element": nist_by_element,
     }
 
 
@@ -197,7 +483,10 @@ def main() -> None:
 
     element_count = len(payload["elements"])
     line_count = sum(len(lines) for lines in payload["spectral_lines_by_element"].values())
-    print(f"Dataset generado: {element_count} elementos, {line_count} líneas espectrales.")
+    print(f"Dataset generado: {element_count} elementos, {line_count} líneas espectrales visibles en app.")
+    print(f"Archivos NIST presentes: {payload['metadata']['nist_files_present']}")
+    print(f"Archivos NIST no tabulares/malformados: {payload['metadata']['nist_files_malformed_or_non_tabular']}")
+    print(f"Líneas NIST importadas: {payload['metadata']['nist_imported_spectral_lines']}")
     print(f"- {processed_path.relative_to(ROOT)}")
     print(f"- {public_path.relative_to(ROOT)}")
 
