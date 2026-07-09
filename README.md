@@ -2,7 +2,7 @@
 
 Aplicación científica estática para explorar la huella luminosa de los elementos: líneas de emisión, absorción, longitud de onda, color visible aproximado, niveles de energía y comparación entre elementos.
 
-> Estado: **V1.4 estructural**.  
+> Estado: **V1.5 estructural**.  
 > Tecnología: **Python + Svelte + TypeScript + Vite + D3**.  
 > Despliegue: **GitHub Pages mediante GitHub Actions**.  
 > Ejecución: **100% estática**, sin servidor externo y sin consultas remotas en tiempo de uso.
@@ -11,7 +11,7 @@ Aplicación científica estática para explorar la huella luminosa de los elemen
 
 El objetivo de **Espectros Atómicos** evoluciona hacia una tabla periódica ampliada: una interfaz visual y educativa donde cada elemento químico pueda consultarse como una ficha científica completa.
 
-La V1.3 ajustó la estética de la tabla principal hacia un sistema de fichas cuadradas, anguladas y coloreadas por categoría. La V1.4 añade la primera estructura de datos para convertir el proyecto en una tabla periódica total, preparada para almacenar por elemento espectros, isótopos, propiedades físicas, química, materiales, historia, industria y otros dominios.
+La V1.3 ajustó la estética de la tabla principal hacia un sistema de fichas cuadradas, anguladas y coloreadas por categoría. La V1.4 añadió la primera estructura de datos para convertir el proyecto en una tabla periódica total. La V1.5 añade una bandeja de importación para CSVs descargados desde NIST ASD y un script para repartirlos automáticamente por elemento.
 
 Cada ficha muestra:
 
@@ -47,6 +47,10 @@ GitHub Actions → build y despliegue automático
 │  ├─ elements/
 │  │  ├─ README.md
 │  │  └─ elements.manifest.csv
+│  ├─ import/
+│  │  ├─ README.md
+│  │  └─ nist/
+│  │     └─ .gitkeep
 │  ├─ raw/
 │  │  ├─ elements.csv
 │  │  └─ sample-lines.csv
@@ -60,6 +64,7 @@ GitHub Actions → build y despliegue automático
 │  └─ favicon.svg
 ├─ scripts/
 │  ├─ build_data.py
+│  ├─ import_nist_exports.py
 │  └─ init_elements_structure.py
 ├─ src/
 │  ├─ app/
@@ -77,7 +82,7 @@ GitHub Actions → build y despliegue automático
 
 ## Datos
 
-Esta V1.4 no hace llamadas externas. Los datos de muestra antiguos siguen dentro de `data/raw/` por compatibilidad con la V1 actual.
+Esta V1.5 no hace llamadas externas. Los datos de muestra antiguos siguen dentro de `data/raw/` por compatibilidad con la V1 actual.
 
 La nueva estructura de datos vive en:
 
@@ -98,6 +103,62 @@ npm run init:elements
 ```
 
 Git no conserva carpetas vacías, por eso las subcarpetas se generan mediante script antes de empezar a cargar datos reales.
+
+## Importar CSVs de NIST ASD
+
+Coloca todos los CSV descargados de NIST en:
+
+```txt
+data/import/nist/
+```
+
+Nombres esperados:
+
+```txt
+001_H_espectro.csv
+001_H_niveles.csv
+002_He_espectro.csv
+002_He_niveles.csv
+...
+118_Og_espectro.csv
+118_Og_niveles.csv
+```
+
+Primero genera las carpetas si no existen:
+
+```bash
+npm run init:elements
+```
+
+Luego prueba la importación sin copiar nada:
+
+```bash
+npm run import:nist:dry
+```
+
+Si la salida es correcta, ejecuta la importación real:
+
+```bash
+npm run import:nist
+```
+
+El script copiará, por ejemplo:
+
+```txt
+data/import/nist/001_H_espectro.csv
+```
+
+a:
+
+```txt
+data/elements/001-H-hydrogen/001_H_espectro.csv
+```
+
+Por defecto copia los archivos y conserva la bandeja de entrada. Para moverlos en vez de copiarlos, se puede ejecutar directamente:
+
+```bash
+python scripts/import_nist_exports.py --move
+```
 
 El script actual `scripts/build_data.py` todavía alimenta la web desde `data/raw/` y `public/data/`. La migración a `data/elements/` se hará en una fase posterior para no romper el despliegue existente.
 
@@ -147,7 +208,7 @@ En GitHub, revisa:
 Settings → Pages → Build and deployment → Source → GitHub Actions
 ```
 
-## Funcionalidades V1.4
+## Funcionalidades V1.5
 
 - Pantalla principal sin cabeceras, subtítulos ni textos guía.
 - Tabla periódica como elemento visual dominante.
@@ -164,6 +225,8 @@ Settings → Pages → Build and deployment → Source → GitHub Actions
 - Nueva estructura `data/elements/` para 118 elementos.
 - Manifiesto maestro `data/elements/elements.manifest.csv`.
 - Generador `npm run init:elements` para crear carpetas y CSVs por elemento.
+- Bandeja `data/import/nist/` para subir CSVs planos de NIST.
+- Importador `npm run import:nist` para repartir espectros y niveles por elemento.
 - Dataset local y estático.
 
 ## Licencia
