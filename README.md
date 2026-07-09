@@ -1,19 +1,19 @@
-# Espectros Atómicos
+# Tabla elementos
 
-Aplicación científica estática para explorar la huella luminosa de los elementos: líneas de emisión, absorción, longitud de onda, color visible aproximado, niveles de energía y comparación entre elementos.
+Tabla periódica ampliada y estática para explorar elementos químicos, espectros, niveles electrónicos, propiedades físicas, química, isótopos, materiales, usos, historia y futuros bloques de datos científicos.
 
-> Estado: **V1.6 estructural**.  
+> Estado: **V1.7 renombrado estructural**.  
 > Tecnología: **Python + Svelte + TypeScript + Vite + D3**.  
 > Despliegue: **GitHub Pages mediante GitHub Actions**.  
 > Ejecución: **100% estática**, sin servidor externo y sin consultas remotas en tiempo de uso.
 
 ## Objetivo del proyecto
 
-El objetivo de **Espectros Atómicos** evoluciona hacia una tabla periódica ampliada: una interfaz visual y educativa donde cada elemento químico pueda consultarse como una ficha científica completa.
+**Tabla elementos** nace como una tabla periódica ampliada: una interfaz visual y educativa donde cada elemento químico pueda consultarse como una ficha científica completa.
 
-La V1.6 carga ya los 118 elementos desde el manifiesto maestro, mantiene la visualización espectral de muestra como respaldo y añade un diagnóstico NIST provisional dentro de cada ficha. El generador analiza si los CSV de `data/import/nist/` son tablas legibles o si parecen exportaciones no tabulares, HTML o JavaScript guardado como CSV.
+El proyecto empezó centrado en espectros atómicos, pero ahora queda preparado para crecer hacia una tabla periódica total. La V1.6 cargó los 118 elementos desde el manifiesto maestro, mantuvo la visualización espectral de muestra como respaldo y añadió un diagnóstico NIST provisional dentro de cada ficha. La V1.7 consolida el nuevo nombre del proyecto y actualiza las referencias internas principales.
 
-Cada ficha muestra:
+Cada ficha de la tabla muestra:
 
 - número atómico;
 - símbolo;
@@ -85,13 +85,15 @@ GitHub Actions → build y despliegue automático
 
 ## Datos
 
-Esta V1.6 no hace llamadas externas. Los datos de muestra antiguos siguen dentro de `data/raw/` por compatibilidad visual, pero la tabla principal se genera desde:
+La aplicación no hace llamadas externas en tiempo de ejecución. Los datos se versionan dentro del repositorio y el build genera un JSON estático en `public/data/`.
+
+La tabla principal se genera desde:
 
 ```txt
 data/elements/elements.manifest.csv
 ```
 
-La nueva estructura de datos vive en:
+La estructura ampliada vive en:
 
 ```txt
 data/elements/
@@ -113,7 +115,7 @@ Git no conserva carpetas vacías, por eso las subcarpetas se generan mediante sc
 
 ## Importar CSVs de NIST ASD
 
-Coloca todos los CSV descargados de NIST en:
+Coloca los CSV descargados de NIST en:
 
 ```txt
 data/import/nist/
@@ -161,7 +163,7 @@ a:
 data/elements/001-H-hydrogen/001_H_espectro.csv
 ```
 
-Por defecto copia los archivos y conserva la bandeja de entrada. Para moverlos en vez de copiarlos, se puede ejecutar directamente:
+Por defecto copia los archivos y conserva la bandeja de entrada. Para moverlos en vez de copiarlos:
 
 ```bash
 python scripts/import_nist_exports.py --move
@@ -192,19 +194,21 @@ npm install
 npm run dev
 ```
 
-## Generar datos actuales de la aplicación
+## Comandos útiles
+
+Generar datos actuales de la aplicación:
 
 ```bash
 npm run build:data
 ```
 
-## Inicializar estructura ampliada de elementos
+Inicializar estructura ampliada de elementos:
 
 ```bash
 npm run init:elements
 ```
 
-## Build de producción
+Build de producción:
 
 ```bash
 npm run build
@@ -226,24 +230,28 @@ En GitHub, revisa:
 Settings → Pages → Build and deployment → Source → GitHub Actions
 ```
 
-## Funcionalidades V1.6
+La base pública configurada para Vite es:
 
+```txt
+/TablaElementos/
+```
+
+## Funcionalidades V1.7
+
+- Proyecto renombrado internamente a **Tabla elementos**.
+- Título HTML y título Svelte actualizados a `Tabla elementos`.
+- Base de GitHub Pages actualizada a `/TablaElementos/`.
+- Favicon SVG nuevo basado en una tabla periódica estilizada.
 - Tabla periódica con los 118 elementos desde `data/elements/elements.manifest.csv`.
 - Lantánidos y actínidos visibles en filas separadas.
 - Pantalla principal sin cabeceras, subtítulos ni textos guía.
 - Tabla periódica como elemento visual dominante.
-- Contenedor visual de la tabla eliminado: solo se ven las fichas.
 - Fichas cuadradas con ángulos de 90 grados.
 - Celdas con número atómico, símbolo y nombre.
 - Coloración por categoría química.
-- Botón `+` por elemento para activar el comparador.
 - Ficha flotante por elemento al pulsar la celda.
 - Pestañas internas: longitudes de onda, niveles de energía, NIST, elemento y datos técnicos.
 - Diagnóstico provisional de archivos NIST por elemento.
-- Interruptor emisión/absorción dentro de la pestaña de longitudes de onda.
-- Comparador inferior tipo bandeja deslizable.
-- Fila Σ de fusión espectral en el comparador.
-- Nueva estructura `data/elements/` para 118 elementos.
 - Bandeja `data/import/nist/` para subir CSVs planos de NIST.
 - Importador `npm run import:nist` para repartir espectros y niveles por elemento.
 - Dataset local y estático.
