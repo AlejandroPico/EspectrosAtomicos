@@ -13,6 +13,7 @@ export async function loadSpectraDataset(): Promise<SpectraDataset> {
 export function hydrateElements(dataset: SpectraDataset): ElementWithLines[] {
   return dataset.elements.map((element) => ({
     ...element,
-    lines: dataset.spectral_lines_by_element[element.symbol] ?? []
+    lines: dataset.spectral_lines_by_element[element.symbol] ?? [],
+    nist: dataset.nist_by_element?.[element.symbol]
   }));
 }
