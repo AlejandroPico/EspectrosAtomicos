@@ -2,7 +2,7 @@
 
 Tabla periódica ampliada y estática para explorar elementos químicos, espectros, niveles electrónicos, propiedades físicas, química, isótopos, materiales, usos, historia y futuros bloques de datos científicos.
 
-> Estado: **V1.8 canvas interactivo**.  
+> Estado: **V1.9 zoom de inspección**.  
 > Tecnología: **Python + Svelte + TypeScript + Vite + D3**.  
 > Despliegue: **GitHub Pages mediante GitHub Actions**.  
 > Ejecución: **100% estática**, sin servidor externo y sin consultas remotas en tiempo de uso.
@@ -11,7 +11,7 @@ Tabla periódica ampliada y estática para explorar elementos químicos, espectr
 
 **Tabla elementos** nace como una tabla periódica ampliada: una interfaz visual y educativa donde cada elemento químico pueda consultarse como una ficha científica completa.
 
-El proyecto empezó centrado en espectros atómicos, pero ahora queda preparado para crecer hacia una tabla periódica total. La V1.8 introduce una primera versión de canvas interactivo: la tabla se visualiza dentro de un viewport sin barras laterales, permite zoom con la rueda del ratón, restablece la vista con doble clic y prepara niveles de detalle progresivos dentro de cada ficha.
+El proyecto empezó centrado en espectros atómicos, pero ahora queda preparado para crecer hacia una tabla periódica total. La V1.9 amplía el canvas interactivo: la tabla ocupa más pantalla en la vista inicial, el zoom máximo llega hasta modo inspección y una ficha puede acercarse lo suficiente como para ocupar prácticamente toda la pantalla.
 
 Cada ficha de la tabla muestra de base:
 
@@ -19,7 +19,7 @@ Cada ficha de la tabla muestra de base:
 - símbolo;
 - nombre del elemento.
 
-Al hacer zoom empiezan a aparecer detalles adicionales provisionales, como categoría y recuento de líneas espectrales disponibles. Esta capa está pensada para ir incorporando más datos conforme avance el dataset.
+Al hacer zoom empiezan a aparecer detalles adicionales provisionales, como categoría, grupo, periodo y recuento de líneas espectrales disponibles. Esta capa está pensada para ir incorporando más datos conforme avance el dataset.
 
 Al pulsar un elemento se abre una ficha flotante con pestañas:
 
@@ -191,6 +191,7 @@ Si los CSV no son tablas limpias, el build no falla: lo marca como diagnóstico 
 - Clic sobre un elemento: abre ficha completa.
 - Añadir al comparador: desde la ficha del elemento.
 - Quitar del comparador: desde la bandeja inferior.
+- Zoom máximo: modo inspección, pensado para que una ficha pueda ocupar casi toda la pantalla.
 
 ## Instalación local
 
@@ -246,16 +247,20 @@ La base pública configurada para Vite es:
 /TablaElementos/
 ```
 
-## Funcionalidades V1.8
+## Funcionalidades V1.9
 
+- Tabla inicial más grande, calculada según ancho y alto de pantalla.
+- Zoom máximo ampliado de `3.2` a `14`.
+- Pasos de zoom más potentes con rueda del ratón.
+- Modo `zoom-inspect` para inspección profunda de una ficha.
+- Tipografía interna ajustada para soportar más datos dentro de cada celda.
+- Detalles progresivos: categoría, grupo/periodo y líneas espectrales.
 - Canvas interactivo para la tabla periódica.
-- Zoom con rueda de ratón.
 - Reset de vista con doble clic.
-- Margen invisible y `overflow` controlado para evitar microbarras laterales al pasar el ratón por los elementos del borde derecho.
+- Margen invisible y `overflow` controlado para evitar microbarras laterales.
 - Eliminado el botón `+` de las celdas de la tabla.
 - Comparador gestionado desde la ficha del elemento.
 - Comparador con eliminación individual y limpieza completa.
-- Detalles progresivos dentro de las celdas según nivel de zoom.
 - Tabla periódica con los 118 elementos desde `data/elements/elements.manifest.csv`.
 - Lantánidos y actínidos visibles en filas separadas.
 - Fichas cuadradas con ángulos de 90 grados.
