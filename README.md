@@ -2,7 +2,7 @@
 
 Aplicación científica estática para explorar la huella luminosa de los elementos: líneas de emisión, absorción, longitud de onda, color visible aproximado, niveles de energía y comparación entre elementos.
 
-> Estado: **V1.2 funcional**.  
+> Estado: **V1.3 funcional**.  
 > Tecnología: **Python + Svelte + TypeScript + Vite + D3**.  
 > Despliegue: **GitHub Pages mediante GitHub Actions**.  
 > Ejecución: **100% estática**, sin servidor externo y sin consultas remotas en tiempo de uso.
@@ -11,7 +11,13 @@ Aplicación científica estática para explorar la huella luminosa de los elemen
 
 El objetivo de **Espectros Atómicos** es construir una interfaz visual y educativa donde cada elemento químico pueda consultarse como una firma espectral: una serie de líneas que aparecen en posiciones concretas del espectro electromagnético.
 
-La V1.2 limpia la pantalla principal y toma como referencia estética el enfoque del proyecto de Nucleidos: vista oscura, tabla dominante, celdas compactas y ausencia de textos explicativos visibles en la interfaz inicial.
+La V1.3 ajusta la estética de la tabla principal hacia un sistema de fichas cuadradas, anguladas y coloreadas por categoría. La pantalla inicial queda reducida a la propia tabla, sin contenedores visibles ni texto explicativo en primer plano.
+
+Cada ficha muestra:
+
+- número atómico;
+- símbolo;
+- nombre del elemento.
 
 Al pulsar un elemento se abre una ficha flotante con pestañas:
 
@@ -67,7 +73,7 @@ GitHub Actions → build y despliegue automático
 
 ## Datos
 
-Esta V1.2 no hace llamadas externas. Los datos de muestra están dentro del repositorio en `data/raw/`.
+Esta V1.3 no hace llamadas externas. Los datos de muestra están dentro del repositorio en `data/raw/`.
 
 El script `scripts/build_data.py`:
 
@@ -119,11 +125,14 @@ En GitHub, revisa:
 Settings → Pages → Build and deployment → Source → GitHub Actions
 ```
 
-## Funcionalidades V1.2
+## Funcionalidades V1.3
 
 - Pantalla principal sin cabeceras, subtítulos ni textos guía.
 - Tabla periódica como elemento visual dominante.
-- Celdas simplificadas: número atómico y símbolo.
+- Contenedor visual de la tabla eliminado: solo se ven las fichas.
+- Fichas cuadradas con ángulos de 90 grados.
+- Celdas con número atómico, símbolo y nombre.
+- Coloración por categoría química.
 - Botón `+` por elemento para activar el comparador.
 - Ficha flotante por elemento al pulsar la celda.
 - Pestañas internas: longitudes de onda, niveles de energía, elemento y datos técnicos.
