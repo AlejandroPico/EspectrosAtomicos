@@ -5,8 +5,8 @@
   export let elements: ElementWithLines[] = [];
   export let selectedSymbol = '';
 
-  const MIN_ZOOM = 0.82;
-  const MAX_ZOOM = 3.2;
+  const MIN_ZOOM = 0.9;
+  const MAX_ZOOM = 14;
 
   let zoom = 1;
   let offsetX = 0;
@@ -17,7 +17,7 @@
   let dragOriginX = 0;
   let dragOriginY = 0;
 
-  $: zoomClass = zoom >= 2.15 ? 'zoom-deep' : zoom >= 1.45 ? 'zoom-medium' : 'zoom-base';
+  $: zoomClass = zoom >= 8 ? 'zoom-inspect' : zoom >= 3.5 ? 'zoom-deep' : zoom >= 1.7 ? 'zoom-medium' : 'zoom-base';
 
   const dispatch = createEventDispatcher<{
     select: string;
@@ -34,7 +34,7 @@
     const rect = viewport.getBoundingClientRect();
     const previousZoom = zoom;
     const direction = event.deltaY > 0 ? -1 : 1;
-    const nextZoom = clamp(zoom * (direction > 0 ? 1.12 : 0.88), MIN_ZOOM, MAX_ZOOM);
+    const nextZoom = clamp(zoom * (direction > 0 ? 1.18 : 0.84), MIN_ZOOM, MAX_ZOOM);
 
     if (nextZoom === previousZoom) {
       return;
@@ -111,7 +111,7 @@
   >
     <div
       class="periodic-grid"
-      style={`transform: translate(${offsetX.toFixed(1)}px, ${offsetY.toFixed(1)}px) scale(${zoom});`}
+      style={`--zoom:${zoom}; transform: translate(${offsetX.toFixed(1)}px, ${offsetY.toFixed(1)}px) scale(${zoom});`}
     >
       {#each elements as element}
         <article
@@ -130,7 +130,8 @@
             <strong>{element.symbol}</strong>
             <span class="element-name">{element.name_es}</span>
             <span class="element-detail detail-medium">{element.category}</span>
-            <span class="element-detail detail-deep">{element.lines.length} líneas espectrales</span>
+            <span class="element-detail detail-deep">Grupo {element.group} · Periodo {element.period}</span>
+            <span class="element-detail detail-inspect">{element.lines.length} líneas espectrales</span>
           </button>
         </article>
       {/each}
