@@ -2,6 +2,7 @@
   import { createEventDispatcher } from 'svelte';
 
   export type TableMode = 'short' | 'long';
+  export type ThemeMode = 'auto' | 'light' | 'dark';
 
   export let zoomPercent = 100;
   export let zoomLevel = 'Vista general';
@@ -10,6 +11,7 @@
   export let nistProblemCount = 0;
   export let softCells = true;
   export let tableMode: TableMode = 'short';
+  export let themeMode: ThemeMode = 'auto';
 
   let infoOpen = false;
 
@@ -19,7 +21,14 @@
     reset: void;
     corners: void;
     layout: void;
+    theme: void;
   }>();
+
+  function themeLabel(): string {
+    if (themeMode === 'light') return 'Tema claro';
+    if (themeMode === 'dark') return 'Tema oscuro';
+    return 'Tema automático';
+  }
 </script>
 
 <div class="view-tools" aria-label="Herramientas de la tabla">
@@ -46,6 +55,16 @@
   </button>
 
   <button
+    class="view-tool-button theme-mode-button"
+    type="button"
+    title={`${themeLabel()}. Pulsar para cambiar.`}
+    aria-label={`${themeLabel()}. Cambiar tema.`}
+    on:click={() => dispatch('theme')}
+  >
+    <span class={`theme-icon ${themeMode}`} aria-hidden="true">{themeMode === 'auto' ? 'A' : ''}</span>
+  </button>
+
+  <button
     class:active={infoOpen}
     class="view-tool-button"
     type="button"
@@ -59,8 +78,8 @@
   <button
     class="view-tool-button"
     type="button"
-    title="Restablecer vista"
-    aria-label="Restablecer zoom y posición"
+    title="Restablecer y encajar la tabla"
+    aria-label="Restablecer zoom, posición y encaje"
     on:click={() => dispatch('reset')}
   >
     <span class="reset-icon" aria-hidden="true">↺</span>
@@ -94,10 +113,10 @@
 
     <div class="view-info-copy">
       <p><strong>Distribución:</strong> {tableMode === 'short' ? 'corta, 18 columnas' : 'larga, 32 columnas'}.</p>
-      <p><strong>Rueda:</strong> zoom centrado en el cursor y redibujado tipográfico.</p>
+      <p><strong>Tema:</strong> {themeLabel().toLowerCase()}.</p>
+      <p><strong>Rueda:</strong> zoom continuo centrado en el cursor.</p>
       <p><strong>Arrastre:</strong> desplaza el escenario cuando estás ampliado.</p>
-      <p><strong>Doble clic:</strong> restaura la vista general.</p>
-      <p>Al aumentar el zoom aparecen categoría, grupo, periodo, cobertura de datos y resumen del elemento.</p>
+      <p><strong>Doble clic:</strong> vuelve a encajar la tabla completa.</p>
     </div>
   </aside>
 {/if}
