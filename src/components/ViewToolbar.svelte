@@ -1,8 +1,8 @@
 <script lang="ts">
   import { createEventDispatcher } from 'svelte';
 
-  export type TableMode = 'short' | 'long';
-  export type ThemeMode = 'auto' | 'light' | 'dark';
+  type TableMode = 'short' | 'long';
+  type ThemeMode = 'auto' | 'light' | 'dark';
 
   export let zoomPercent = 100;
   export let zoomLevel = 'Vista general';
