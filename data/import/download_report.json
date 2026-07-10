@@ -1,0 +1,743 @@
+{
+  "started_at": "2026-07-10T13:14:55+00:00",
+  "finished_at": "2026-07-10T13:25:48+00:00",
+  "version": "1.1.0",
+  "project_root": "D:\\Nueva carpeta\\TablaElementos-datos",
+  "selected_elements": [
+    "H",
+    "He",
+    "Li",
+    "Be",
+    "B",
+    "C",
+    "N",
+    "O",
+    "F",
+    "Ne",
+    "Na",
+    "Mg",
+    "Al",
+    "Si",
+    "P",
+    "S",
+    "Cl",
+    "Ar",
+    "K",
+    "Ca",
+    "Sc",
+    "Ti",
+    "V",
+    "Cr",
+    "Mn",
+    "Fe",
+    "Co",
+    "Ni",
+    "Cu",
+    "Zn",
+    "Ga",
+    "Ge",
+    "As",
+    "Se",
+    "Br",
+    "Kr",
+    "Rb",
+    "Sr",
+    "Y",
+    "Zr",
+    "Nb",
+    "Mo",
+    "Tc",
+    "Ru",
+    "Rh",
+    "Pd",
+    "Ag",
+    "Cd",
+    "In",
+    "Sn",
+    "Sb",
+    "Te",
+    "I",
+    "Xe",
+    "Cs",
+    "Ba",
+    "La",
+    "Ce",
+    "Pr",
+    "Nd",
+    "Pm",
+    "Sm",
+    "Eu",
+    "Gd",
+    "Tb",
+    "Dy",
+    "Ho",
+    "Er",
+    "Tm",
+    "Yb",
+    "Lu",
+    "Hf",
+    "Ta",
+    "W",
+    "Re",
+    "Os",
+    "Ir",
+    "Pt",
+    "Au",
+    "Hg",
+    "Tl",
+    "Pb",
+    "Bi",
+    "Po",
+    "At",
+    "Rn",
+    "Fr",
+    "Ra",
+    "Ac",
+    "Th",
+    "Pa",
+    "U",
+    "Np",
+    "Pu",
+    "Am",
+    "Cm",
+    "Bk",
+    "Cf",
+    "Es",
+    "Fm",
+    "Md",
+    "No",
+    "Lr",
+    "Rf",
+    "Db",
+    "Sg",
+    "Bh",
+    "Hs",
+    "Mt",
+    "Ds",
+    "Rg",
+    "Cn",
+    "Nh",
+    "Fl",
+    "Mc",
+    "Lv",
+    "Ts",
+    "Og"
+  ],
+  "providers": [
+    "pubchem",
+    "ciaaw",
+    "iaea",
+    "nist"
+  ],
+  "successes": 102,
+  "skipped": 0,
+  "warnings": 19,
+  "errors": 0,
+  "messages": [
+    {
+      "level": "success",
+      "provider": "PubChem",
+      "message": "Tabla periódica procesada para 118 elementos"
+    },
+    {
+      "level": "success",
+      "provider": "CIAAW",
+      "message": "Pesos atómicos incorporados en 84 elementos"
+    },
+    {
+      "level": "success",
+      "provider": "IAEA LiveChart",
+      "message": "3386 estados fundamentales descargados y divididos por elemento"
+    },
+    {
+      "level": "success",
+      "provider": "NIST ASD",
+      "message": "H: líneas=ok, niveles=ok"
+    },
+    {
+      "level": "success",
+      "provider": "NIST ASD",
+      "message": "He: líneas=ok, niveles=ok"
+    },
+    {
+      "level": "success",
+      "provider": "NIST ASD",
+      "message": "Li: líneas=ok, niveles=ok"
+    },
+    {
+      "level": "success",
+      "provider": "NIST ASD",
+      "message": "Be: líneas=ok, niveles=ok"
+    },
+    {
+      "level": "success",
+      "provider": "NIST ASD",
+      "message": "B: líneas=ok, niveles=ok"
+    },
+    {
+      "level": "success",
+      "provider": "NIST ASD",
+      "message": "C: líneas=ok, niveles=ok"
+    },
+    {
+      "level": "success",
+      "provider": "NIST ASD",
+      "message": "N: líneas=ok, niveles=ok"
+    },
+    {
+      "level": "success",
+      "provider": "NIST ASD",
+      "message": "O: líneas=ok, niveles=ok"
+    },
+    {
+      "level": "success",
+      "provider": "NIST ASD",
+      "message": "F: líneas=ok, niveles=ok"
+    },
+    {
+      "level": "success",
+      "provider": "NIST ASD",
+      "message": "Ne: líneas=ok, niveles=ok"
+    },
+    {
+      "level": "success",
+      "provider": "NIST ASD",
+      "message": "Na: líneas=ok, niveles=ok"
+    },
+    {
+      "level": "success",
+      "provider": "NIST ASD",
+      "message": "Mg: líneas=ok, niveles=ok"
+    },
+    {
+      "level": "success",
+      "provider": "NIST ASD",
+      "message": "Al: líneas=ok, niveles=ok"
+    },
+    {
+      "level": "success",
+      "provider": "NIST ASD",
+      "message": "Si: líneas=ok, niveles=ok"
+    },
+    {
+      "level": "success",
+      "provider": "NIST ASD",
+      "message": "P: líneas=ok, niveles=ok"
+    },
+    {
+      "level": "success",
+      "provider": "NIST ASD",
+      "message": "S: líneas=ok, niveles=ok"
+    },
+    {
+      "level": "success",
+      "provider": "NIST ASD",
+      "message": "Cl: líneas=ok, niveles=ok"
+    },
+    {
+      "level": "success",
+      "provider": "NIST ASD",
+      "message": "Ar: líneas=ok, niveles=ok"
+    },
+    {
+      "level": "success",
+      "provider": "NIST ASD",
+      "message": "K: líneas=ok, niveles=ok"
+    },
+    {
+      "level": "success",
+      "provider": "NIST ASD",
+      "message": "Ca: líneas=ok, niveles=ok"
+    },
+    {
+      "level": "success",
+      "provider": "NIST ASD",
+      "message": "Sc: líneas=ok, niveles=ok"
+    },
+    {
+      "level": "success",
+      "provider": "NIST ASD",
+      "message": "Ti: líneas=ok, niveles=ok"
+    },
+    {
+      "level": "success",
+      "provider": "NIST ASD",
+      "message": "V: líneas=ok, niveles=ok"
+    },
+    {
+      "level": "success",
+      "provider": "NIST ASD",
+      "message": "Cr: líneas=ok, niveles=ok"
+    },
+    {
+      "level": "success",
+      "provider": "NIST ASD",
+      "message": "Mn: líneas=ok, niveles=ok"
+    },
+    {
+      "level": "success",
+      "provider": "NIST ASD",
+      "message": "Fe: líneas=ok, niveles=ok"
+    },
+    {
+      "level": "success",
+      "provider": "NIST ASD",
+      "message": "Co: líneas=ok, niveles=ok"
+    },
+    {
+      "level": "success",
+      "provider": "NIST ASD",
+      "message": "Ni: líneas=ok, niveles=ok"
+    },
+    {
+      "level": "success",
+      "provider": "NIST ASD",
+      "message": "Cu: líneas=ok, niveles=ok"
+    },
+    {
+      "level": "success",
+      "provider": "NIST ASD",
+      "message": "Zn: líneas=ok, niveles=ok"
+    },
+    {
+      "level": "success",
+      "provider": "NIST ASD",
+      "message": "Ga: líneas=ok, niveles=ok"
+    },
+    {
+      "level": "success",
+      "provider": "NIST ASD",
+      "message": "Ge: líneas=ok, niveles=ok"
+    },
+    {
+      "level": "success",
+      "provider": "NIST ASD",
+      "message": "As: líneas=ok, niveles=ok"
+    },
+    {
+      "level": "success",
+      "provider": "NIST ASD",
+      "message": "Se: líneas=ok, niveles=ok"
+    },
+    {
+      "level": "success",
+      "provider": "NIST ASD",
+      "message": "Br: líneas=ok, niveles=ok"
+    },
+    {
+      "level": "success",
+      "provider": "NIST ASD",
+      "message": "Kr: líneas=ok, niveles=ok"
+    },
+    {
+      "level": "success",
+      "provider": "NIST ASD",
+      "message": "Rb: líneas=ok, niveles=ok"
+    },
+    {
+      "level": "success",
+      "provider": "NIST ASD",
+      "message": "Sr: líneas=ok, niveles=ok"
+    },
+    {
+      "level": "success",
+      "provider": "NIST ASD",
+      "message": "Y: líneas=ok, niveles=ok"
+    },
+    {
+      "level": "success",
+      "provider": "NIST ASD",
+      "message": "Zr: líneas=ok, niveles=ok"
+    },
+    {
+      "level": "success",
+      "provider": "NIST ASD",
+      "message": "Nb: líneas=ok, niveles=ok"
+    },
+    {
+      "level": "success",
+      "provider": "NIST ASD",
+      "message": "Mo: líneas=ok, niveles=ok"
+    },
+    {
+      "level": "success",
+      "provider": "NIST ASD",
+      "message": "Tc: líneas=ok, niveles=ok"
+    },
+    {
+      "level": "success",
+      "provider": "NIST ASD",
+      "message": "Ru: líneas=ok, niveles=ok"
+    },
+    {
+      "level": "success",
+      "provider": "NIST ASD",
+      "message": "Rh: líneas=ok, niveles=ok"
+    },
+    {
+      "level": "success",
+      "provider": "NIST ASD",
+      "message": "Pd: líneas=ok, niveles=ok"
+    },
+    {
+      "level": "success",
+      "provider": "NIST ASD",
+      "message": "Ag: líneas=ok, niveles=ok"
+    },
+    {
+      "level": "success",
+      "provider": "NIST ASD",
+      "message": "Cd: líneas=ok, niveles=ok"
+    },
+    {
+      "level": "success",
+      "provider": "NIST ASD",
+      "message": "In: líneas=ok, niveles=ok"
+    },
+    {
+      "level": "success",
+      "provider": "NIST ASD",
+      "message": "Sn: líneas=ok, niveles=ok"
+    },
+    {
+      "level": "success",
+      "provider": "NIST ASD",
+      "message": "Sb: líneas=ok, niveles=ok"
+    },
+    {
+      "level": "success",
+      "provider": "NIST ASD",
+      "message": "Te: líneas=ok, niveles=ok"
+    },
+    {
+      "level": "success",
+      "provider": "NIST ASD",
+      "message": "I: líneas=ok, niveles=ok"
+    },
+    {
+      "level": "success",
+      "provider": "NIST ASD",
+      "message": "Xe: líneas=ok, niveles=ok"
+    },
+    {
+      "level": "success",
+      "provider": "NIST ASD",
+      "message": "Cs: líneas=ok, niveles=ok"
+    },
+    {
+      "level": "success",
+      "provider": "NIST ASD",
+      "message": "Ba: líneas=ok, niveles=ok"
+    },
+    {
+      "level": "success",
+      "provider": "NIST ASD",
+      "message": "La: líneas=ok, niveles=ok"
+    },
+    {
+      "level": "success",
+      "provider": "NIST ASD",
+      "message": "Ce: líneas=ok, niveles=ok"
+    },
+    {
+      "level": "success",
+      "provider": "NIST ASD",
+      "message": "Pr: líneas=ok, niveles=ok"
+    },
+    {
+      "level": "success",
+      "provider": "NIST ASD",
+      "message": "Nd: líneas=ok, niveles=ok"
+    },
+    {
+      "level": "success",
+      "provider": "NIST ASD",
+      "message": "Pm: líneas=ok, niveles=ok"
+    },
+    {
+      "level": "success",
+      "provider": "NIST ASD",
+      "message": "Sm: líneas=ok, niveles=ok"
+    },
+    {
+      "level": "success",
+      "provider": "NIST ASD",
+      "message": "Eu: líneas=ok, niveles=ok"
+    },
+    {
+      "level": "success",
+      "provider": "NIST ASD",
+      "message": "Gd: líneas=ok, niveles=ok"
+    },
+    {
+      "level": "success",
+      "provider": "NIST ASD",
+      "message": "Tb: líneas=ok, niveles=ok"
+    },
+    {
+      "level": "success",
+      "provider": "NIST ASD",
+      "message": "Dy: líneas=ok, niveles=ok"
+    },
+    {
+      "level": "success",
+      "provider": "NIST ASD",
+      "message": "Ho: líneas=ok, niveles=ok"
+    },
+    {
+      "level": "success",
+      "provider": "NIST ASD",
+      "message": "Er: líneas=ok, niveles=ok"
+    },
+    {
+      "level": "success",
+      "provider": "NIST ASD",
+      "message": "Tm: líneas=ok, niveles=ok"
+    },
+    {
+      "level": "success",
+      "provider": "NIST ASD",
+      "message": "Yb: líneas=ok, niveles=ok"
+    },
+    {
+      "level": "success",
+      "provider": "NIST ASD",
+      "message": "Lu: líneas=ok, niveles=ok"
+    },
+    {
+      "level": "success",
+      "provider": "NIST ASD",
+      "message": "Hf: líneas=ok, niveles=ok"
+    },
+    {
+      "level": "success",
+      "provider": "NIST ASD",
+      "message": "Ta: líneas=ok, niveles=ok"
+    },
+    {
+      "level": "success",
+      "provider": "NIST ASD",
+      "message": "W: líneas=ok, niveles=ok"
+    },
+    {
+      "level": "success",
+      "provider": "NIST ASD",
+      "message": "Re: líneas=ok, niveles=ok"
+    },
+    {
+      "level": "success",
+      "provider": "NIST ASD",
+      "message": "Os: líneas=ok, niveles=ok"
+    },
+    {
+      "level": "success",
+      "provider": "NIST ASD",
+      "message": "Ir: líneas=ok, niveles=ok"
+    },
+    {
+      "level": "success",
+      "provider": "NIST ASD",
+      "message": "Pt: líneas=ok, niveles=ok"
+    },
+    {
+      "level": "success",
+      "provider": "NIST ASD",
+      "message": "Au: líneas=ok, niveles=ok"
+    },
+    {
+      "level": "success",
+      "provider": "NIST ASD",
+      "message": "Hg: líneas=ok, niveles=ok"
+    },
+    {
+      "level": "success",
+      "provider": "NIST ASD",
+      "message": "Tl: líneas=ok, niveles=ok"
+    },
+    {
+      "level": "success",
+      "provider": "NIST ASD",
+      "message": "Pb: líneas=ok, niveles=ok"
+    },
+    {
+      "level": "success",
+      "provider": "NIST ASD",
+      "message": "Bi: líneas=ok, niveles=ok"
+    },
+    {
+      "level": "success",
+      "provider": "NIST ASD",
+      "message": "Po: líneas=ok, niveles=ok"
+    },
+    {
+      "level": "success",
+      "provider": "NIST ASD",
+      "message": "At: líneas=ok, niveles=ok"
+    },
+    {
+      "level": "success",
+      "provider": "NIST ASD",
+      "message": "Rn: líneas=ok, niveles=ok"
+    },
+    {
+      "level": "success",
+      "provider": "NIST ASD",
+      "message": "Fr: líneas=ok, niveles=ok"
+    },
+    {
+      "level": "success",
+      "provider": "NIST ASD",
+      "message": "Ra: líneas=ok, niveles=ok"
+    },
+    {
+      "level": "success",
+      "provider": "NIST ASD",
+      "message": "Ac: líneas=ok, niveles=ok"
+    },
+    {
+      "level": "success",
+      "provider": "NIST ASD",
+      "message": "Th: líneas=ok, niveles=ok"
+    },
+    {
+      "level": "success",
+      "provider": "NIST ASD",
+      "message": "Pa: líneas=ok, niveles=ok"
+    },
+    {
+      "level": "success",
+      "provider": "NIST ASD",
+      "message": "U: líneas=ok, niveles=ok"
+    },
+    {
+      "level": "success",
+      "provider": "NIST ASD",
+      "message": "Np: líneas=ok, niveles=ok"
+    },
+    {
+      "level": "success",
+      "provider": "NIST ASD",
+      "message": "Pu: líneas=ok, niveles=ok"
+    },
+    {
+      "level": "success",
+      "provider": "NIST ASD",
+      "message": "Am: líneas=ok, niveles=ok"
+    },
+    {
+      "level": "success",
+      "provider": "NIST ASD",
+      "message": "Cm: líneas=ok, niveles=ok"
+    },
+    {
+      "level": "success",
+      "provider": "NIST ASD",
+      "message": "Bk: líneas=ok, niveles=ok"
+    },
+    {
+      "level": "success",
+      "provider": "NIST ASD",
+      "message": "Cf: líneas=ok, niveles=ok"
+    },
+    {
+      "level": "success",
+      "provider": "NIST ASD",
+      "message": "Es: líneas=ok, niveles=ok"
+    },
+    {
+      "level": "warning",
+      "provider": "NIST ASD",
+      "message": "Fm: alguna respuesta no fue tabular; consulta los diagnósticos brutos"
+    },
+    {
+      "level": "warning",
+      "provider": "NIST ASD",
+      "message": "Md: alguna respuesta no fue tabular; consulta los diagnósticos brutos"
+    },
+    {
+      "level": "warning",
+      "provider": "NIST ASD",
+      "message": "No: alguna respuesta no fue tabular; consulta los diagnósticos brutos"
+    },
+    {
+      "level": "warning",
+      "provider": "NIST ASD",
+      "message": "Lr: alguna respuesta no fue tabular; consulta los diagnósticos brutos"
+    },
+    {
+      "level": "warning",
+      "provider": "NIST ASD",
+      "message": "Rf: alguna respuesta no fue tabular; consulta los diagnósticos brutos"
+    },
+    {
+      "level": "warning",
+      "provider": "NIST ASD",
+      "message": "Db: alguna respuesta no fue tabular; consulta los diagnósticos brutos"
+    },
+    {
+      "level": "warning",
+      "provider": "NIST ASD",
+      "message": "Sg: alguna respuesta no fue tabular; consulta los diagnósticos brutos"
+    },
+    {
+      "level": "warning",
+      "provider": "NIST ASD",
+      "message": "Bh: alguna respuesta no fue tabular; consulta los diagnósticos brutos"
+    },
+    {
+      "level": "warning",
+      "provider": "NIST ASD",
+      "message": "Hs: alguna respuesta no fue tabular; consulta los diagnósticos brutos"
+    },
+    {
+      "level": "warning",
+      "provider": "NIST ASD",
+      "message": "Mt: alguna respuesta no fue tabular; consulta los diagnósticos brutos"
+    },
+    {
+      "level": "warning",
+      "provider": "NIST ASD",
+      "message": "Ds: alguna respuesta no fue tabular; consulta los diagnósticos brutos"
+    },
+    {
+      "level": "warning",
+      "provider": "NIST ASD",
+      "message": "Rg: alguna respuesta no fue tabular; consulta los diagnósticos brutos"
+    },
+    {
+      "level": "warning",
+      "provider": "NIST ASD",
+      "message": "Cn: alguna respuesta no fue tabular; consulta los diagnósticos brutos"
+    },
+    {
+      "level": "warning",
+      "provider": "NIST ASD",
+      "message": "Nh: alguna respuesta no fue tabular; consulta los diagnósticos brutos"
+    },
+    {
+      "level": "warning",
+      "provider": "NIST ASD",
+      "message": "Fl: alguna respuesta no fue tabular; consulta los diagnósticos brutos"
+    },
+    {
+      "level": "warning",
+      "provider": "NIST ASD",
+      "message": "Mc: alguna respuesta no fue tabular; consulta los diagnósticos brutos"
+    },
+    {
+      "level": "warning",
+      "provider": "NIST ASD",
+      "message": "Lv: alguna respuesta no fue tabular; consulta los diagnósticos brutos"
+    },
+    {
+      "level": "warning",
+      "provider": "NIST ASD",
+      "message": "Ts: alguna respuesta no fue tabular; consulta los diagnósticos brutos"
+    },
+    {
+      "level": "warning",
+      "provider": "NIST ASD",
+      "message": "Og: alguna respuesta no fue tabular; consulta los diagnósticos brutos"
+    }
+  ]
+}
