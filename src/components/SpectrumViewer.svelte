@@ -11,6 +11,7 @@
 
   $: ticks = x.ticks(10);
   $: sortedLines = [...lines].sort((a, b) => a.wavelength_nm - b.wavelength_nm);
+  $: hasLines = sortedLines.length > 0;
 
   function leftPosition(wavelength: number): number {
     return x(wavelength);
@@ -31,18 +32,19 @@
       <p class="eyebrow">Longitud de onda</p>
       <h2>{title}</h2>
     </div>
-    <span class="range-pill">320–780 nm</span>
+    <span class="range-pill">{hasLines ? `${sortedLines.length} líneas` : 'Sin líneas importadas'}</span>
   </div>
 
   <div class="region-labels" aria-hidden="true">
     <span>UV cercano</span>
-    <span>Visible</span>
+    <span>Visible 380–750 nm</span>
     <span>IR cercano</span>
   </div>
 
-  <div class:absorption={mode === 'absorption'} class:emission={mode === 'emission'} class="spectrum-stage">
+  <div class:absorption={mode === 'absorption'} class:emission={mode === 'emission'} class:empty={!hasLines} class="spectrum-stage">
     <div
       class="visible-window"
+      title="Rango visible aproximado: 380–750 nm. No es una línea espectral."
       style={`left:${leftPosition(VISIBLE_MIN_NM)}%;width:${leftPosition(VISIBLE_MAX_NM) - leftPosition(VISIBLE_MIN_NM)}%;`}
     ></div>
 
@@ -52,22 +54,32 @@
       </div>
     {/each}
 
-    {#each sortedLines as line}
-      <button
-        class:outside-visible={!line.visible}
-        class="spectral-line"
-        style={`
-          left:${leftPosition(line.wavelength_nm)}%;
-          height:${lineHeight(line)}px;
-          opacity:${lineOpacity(line)};
-          --line-color:${mode === 'emission' ? line.approximate_color : '#101522'};
-        `}
-        type="button"
-        title={`${line.label} · ${formatNm(line.wavelength_nm)} · ${wavelengthRegion(line.wavelength_nm)}`}
-      >
-        <span></span>
-      </button>
-    {/each}
+    {#if hasLines}
+      {#each sortedLines as line}
+        <button
+          class:outside-visible={!line.visible}
+          class="spectral-line"
+          style={`
+            left:${leftPosition(line.wavelength_nm)}%;
+            height:${lineHeight(line)}px;
+            opacity:${lineOpacity(line)};
+            --line-color:${mode === 'emission' ? line.approximate_color : '#101522'};
+          `}
+          type="button"
+          title={`${line.label} · ${formatNm(line.wavelength_nm)} · ${wavelengthRegion(line.wavelength_nm)}`}
+        >
+          <span></span>
+        </button>
+      {/each}
+    {:else}
+      <div class="spectrum-empty">
+        <strong>No hay líneas espectrales representables</strong>
+        <span>
+          Las marcas de 380 y 750 nm solo delimitan el rango visible. Cuando el CSV NIST sea una tabla limpia,
+          aquí aparecerán sus líneas reales.
+        </span>
+      </div>
+    {/if}
   </div>
 
   <div class="axis-footer">
