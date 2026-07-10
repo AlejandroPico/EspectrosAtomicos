@@ -1,0 +1,9 @@
+{
+  "element": "Ts",
+  "spectrum": "Ts I",
+  "dataset": "ASD spectral lines",
+  "endpoint": "https://physics.nist.gov/cgi-bin/ASD/lines1.pl?spectra=Ts+I&limits_type=0&low_w=&upp_w=&unit=1&submit=Retrieve+Data&de=0&format=1&line_out=0&remove_js=on&en_unit=1&output=0&bibrefs=1&page_size=5000&show_obs_wl=1&show_calc_wl=1&unc_out=1&order_out=0&max_low_enrg=&show_av=3&max_upp_enrg=&tsb_value=0&min_str=&A_out=0&f_out=on&S_out=on&loggf_out=on&intens_out=on&max_str=&allowed_out=1&forbid_out=1&min_accur=&min_intens=&conf_out=on&term_out=on&enrg_out=on&J_out=on&g_out=on",
+  "problem": "Formato 1: respuesta HTML/JavaScript rechazada (text/html; charset=ISO-8859-1)",
+  "retrieved_at": "2026-07-10T13:25:41+00:00",
+  "sha256": "3d750b04e368898258ad9639c60977ee5f2d7c348218cd187da00ddea16a56bc"
+}
