@@ -185,7 +185,7 @@ def load_elements() -> dict[str, Element]:
             atomic_number = int(row["atomic_number"])
             group, period = display_position(atomic_number, int(row["group"]), int(row["period"]))
             symbol = row["symbol"]
-            element = Element(
+            elements[symbol] = Element(
                 symbol=symbol,
                 name_es=row["name_es"],
                 name_en=row["name_en"],
@@ -198,7 +198,6 @@ def load_elements() -> dict[str, Element]:
                     f"Elemento químico {row['name_es']} ({symbol}), número atómico {atomic_number}.",
                 ),
             )
-            elements[element.symbol] = element
 
     return elements
 
@@ -422,12 +421,17 @@ def analyze_nist_for_element(element: Element) -> tuple[NistElementStatus, list[
     )
 
 
+def has_any_nist_file(status: NistElementStatus) -> bool:
+    return status.espectro.present or status.niveles.present
+
+
 def build_payload() -> dict[str, Any]:
     elements = load_elements()
     sample_lines = load_sample_lines(elements)
 
     grouped_lines: dict[str, list[dict[str, Any]]] = {symbol: [] for symbol in elements}
     nist_by_element: dict[str, dict[str, Any]] = {}
+    nist_status_by_symbol: dict[str, NistElementStatus] = {}
 
     imported_total = 0
     malformed_files = 0
@@ -435,6 +439,7 @@ def build_payload() -> dict[str, Any]:
 
     for element in sorted(elements.values(), key=lambda item: item.atomic_number):
         nist_status, imported_lines = analyze_nist_for_element(element)
+        nist_status_by_symbol[element.symbol] = nist_status
         nist_by_element[element.symbol] = asdict(nist_status)
         imported_total += len(imported_lines)
 
@@ -448,7 +453,8 @@ def build_payload() -> dict[str, Any]:
             grouped_lines[element.symbol].append(asdict(line))
 
     for line in sorted(sample_lines, key=lambda item: (item.element, item.wavelength_nm)):
-        if not grouped_lines[line.element]:
+        nist_status = nist_status_by_symbol.get(line.element)
+        if not grouped_lines[line.element] and nist_status is not None and not has_any_nist_file(nist_status):
             grouped_lines[line.element].append(asdict(line))
 
     ordered_elements = sorted(elements.values(), key=lambda item: item.atomic_number)
@@ -456,8 +462,8 @@ def build_payload() -> dict[str, Any]:
     return {
         "metadata": {
             "project": "Tabla elementos",
-            "dataset": "elements-v3-nist-by-element",
-            "description": "Dataset local con 118 elementos y datos NIST buscados dentro de data/elements/<elemento>/.",
+            "dataset": "elements-v4-nist-diagnostics",
+            "description": "Dataset local con 118 elementos; no usa líneas de muestra cuando existen CSV NIST no tabulares.",
             "external_runtime_requests": False,
             "visible_range_nm": [VISIBLE_MIN_NM, VISIBLE_MAX_NM],
             "generated_by": "scripts/build_data.py",
