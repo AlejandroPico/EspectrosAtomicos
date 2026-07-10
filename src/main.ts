@@ -4,6 +4,7 @@ import './styles/expanded.css';
 import './styles/diagnostics.css';
 import './styles/refinement.css';
 import './styles/layout-modes.css';
+import './styles/theme.css';
 import App from './app/App.svelte';
 
 const target = document.getElementById('app');
