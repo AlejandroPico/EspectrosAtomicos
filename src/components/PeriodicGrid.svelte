@@ -2,8 +2,11 @@
   import { createEventDispatcher, onMount } from 'svelte';
   import type { ElementWithLines } from '../lib/atomicTypes';
 
+  export type TableMode = 'short' | 'long';
+
   export let elements: ElementWithLines[] = [];
   export let selectedSymbol = '';
+  export let tableMode: TableMode = 'short';
 
   const MIN_ZOOM = 0.9;
   const MAX_ZOOM = 14;
@@ -18,6 +21,7 @@
   let dragOriginY = 0;
 
   $: zoomClass = zoom >= 7.5 ? 'zoom-inspect' : zoom >= 3.2 ? 'zoom-deep' : zoom >= 1.6 ? 'zoom-medium' : 'zoom-base';
+  $: contentScale = Math.pow(zoom, 0.36);
 
   const dispatch = createEventDispatcher<{
     select: string;
@@ -72,7 +76,7 @@
 
   function startDrag(event: PointerEvent): void {
     const target = event.target as HTMLElement;
-    if (target.closest('.element-open-button')) return;
+    if (target.closest('.element-open-button, .series-placeholder')) return;
 
     isDragging = true;
     dragStartX = event.clientX;
@@ -135,12 +139,37 @@
     return 'Datos pendientes';
   }
 
+  function shortPosition(element: ElementWithLines): { column: number; row: number } {
+    if (element.atomic_number >= 57 && element.atomic_number <= 71) {
+      return { column: element.atomic_number - 54, row: 8 };
+    }
+    if (element.atomic_number >= 89 && element.atomic_number <= 103) {
+      return { column: element.atomic_number - 86, row: 9 };
+    }
+    return { column: element.group, row: element.period };
+  }
+
+  function longPosition(element: ElementWithLines): { column: number; row: number } {
+    const z = element.atomic_number;
+    if (z >= 55 && z <= 86) return { column: z - 54, row: 6 };
+    if (z >= 87 && z <= 118) return { column: z - 86, row: 7 };
+    return {
+      column: element.group <= 2 ? element.group : element.group + 14,
+      row: element.period
+    };
+  }
+
+  function positionStyle(element: ElementWithLines): string {
+    const position = tableMode === 'long' ? longPosition(element) : shortPosition(element);
+    return `grid-column:${position.column};grid-row:${position.row};view-transition-name:element-${element.symbol};`;
+  }
+
   onMount(publishZoom);
 </script>
 
 <section class="periodic-card" aria-label="Tabla elementos">
   <div
-    class={`periodic-viewport ${zoomClass}`}
+    class={`periodic-viewport ${zoomClass} table-${tableMode}`}
     role="application"
     aria-label="Escenario interactivo de la tabla periódica"
     on:wheel={handleWheel}
@@ -152,49 +181,65 @@
     on:dblclick={resetView}
   >
     <div
-      class="periodic-grid"
-      style={`--zoom:${zoom}; transform: translate(${offsetX.toFixed(1)}px, ${offsetY.toFixed(1)}px) scale(${zoom});`}
+      class="periodic-pan"
+      style={`transform:translate(calc(-50% + ${offsetX.toFixed(1)}px), calc(-50% + ${offsetY.toFixed(1)}px));`}
     >
-      {#each elements as element}
-        <article
-          class:active={selectedSymbol === element.symbol}
-          class={`element-cell ${categoryClass(element.category)} data-${dataState(element)}`}
-          style={`grid-column:${element.group};grid-row:${element.period};`}
-          title={`${element.name_es} (${element.symbol})`}
-        >
-          <button
-            class="element-open-button"
-            type="button"
-            on:click={() => dispatch('select', element.symbol)}
-            aria-label={`Abrir ficha maestra de ${element.name_es}`}
+      <div
+        class={`periodic-grid mode-${tableMode}`}
+        style={`--zoom:${zoom};--content-scale:${contentScale.toFixed(3)};zoom:${zoom};`}
+      >
+        {#if tableMode === 'short'}
+          <article class="series-placeholder lanthanide-placeholder" style="grid-column:3;grid-row:6;">
+            <strong>57–71</strong><span>La–Lu</span><small>Lantánidos</small>
+          </article>
+          <article class="series-placeholder actinide-placeholder" style="grid-column:3;grid-row:7;">
+            <strong>89–103</strong><span>Ac–Lr</span><small>Actínidos</small>
+          </article>
+          <div class="series-guide lanthanide-guide" style="grid-column:3 / 18;grid-row:8;"></div>
+          <div class="series-guide actinide-guide" style="grid-column:3 / 18;grid-row:9;"></div>
+        {/if}
+
+        {#each elements as element (element.symbol)}
+          <article
+            class:active={selectedSymbol === element.symbol}
+            class={`element-cell ${categoryClass(element.category)} data-${dataState(element)}`}
+            style={positionStyle(element)}
+            title={`${element.name_es} (${element.symbol})`}
           >
-            <div class="cell-topline">
-              <span class="atomic-number">{element.atomic_number}</span>
-              <span class="cell-data-state" title={dataLabel(element)}>{dataLabel(element)}</span>
-            </div>
+            <button
+              class="element-open-button"
+              type="button"
+              on:click={() => dispatch('select', element.symbol)}
+              aria-label={`Abrir ficha maestra de ${element.name_es}`}
+            >
+              <div class="cell-topline">
+                <span class="atomic-number">{element.atomic_number}</span>
+                <span class="cell-data-state" title={dataLabel(element)}>{dataLabel(element)}</span>
+              </div>
 
-            <div class="element-core">
-              <strong>{element.symbol}</strong>
-              <span class="element-name">{element.name_es}</span>
-            </div>
+              <div class="element-core">
+                <strong>{element.symbol}</strong>
+                <span class="element-name">{element.name_es}</span>
+              </div>
 
-            <div class="element-metrics detail-medium">
-              <span><small>Grupo</small><b>{element.group}</b></span>
-              <span><small>Periodo</small><b>{element.period}</b></span>
-              <span><small>Categoría</small><b>{element.category}</b></span>
-            </div>
+              <div class="element-metrics detail-medium">
+                <span><small>Grupo</small><b>{element.group}</b></span>
+                <span><small>Periodo</small><b>{element.period}</b></span>
+                <span><small>Categoría</small><b>{element.category}</b></span>
+              </div>
 
-            <div class="element-coverage detail-deep">
-              <span>Identidad</span>
-              <span class:ready={element.lines.length > 0}>Espectro</span>
-              <span class:warning={dataState(element) === 'review'}>NIST</span>
-              <span>Ficha maestra</span>
-            </div>
+              <div class="element-coverage detail-deep">
+                <span>Identidad</span>
+                <span class:ready={element.lines.length > 0}>Espectro</span>
+                <span class:warning={dataState(element) === 'review'}>NIST</span>
+                <span>Ficha maestra</span>
+              </div>
 
-            <p class="element-summary detail-inspect">{element.summary}</p>
-          </button>
-        </article>
-      {/each}
+              <p class="element-summary detail-inspect">{element.summary}</p>
+            </button>
+          </article>
+        {/each}
+      </div>
     </div>
   </div>
 </section>
