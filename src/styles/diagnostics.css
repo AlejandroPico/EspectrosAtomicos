@@ -1,0 +1,61 @@
+.spectral-warning {
+  display: grid;
+  gap: 4px;
+  border-bottom: 1px solid rgba(255, 209, 102, 0.28);
+  padding: 10px 20px;
+  color: #ffe8a3;
+  background: rgba(82, 54, 7, 0.28);
+}
+
+.spectral-warning strong {
+  font-size: 0.9rem;
+}
+
+.spectral-warning span {
+  color: rgba(255, 244, 205, 0.82);
+  font-size: 0.82rem;
+}
+
+.spectrum-stage.empty,
+.energy-stage.empty {
+  display: grid;
+  place-items: center;
+}
+
+.spectrum-stage.empty .visible-window {
+  opacity: 0.22;
+}
+
+.spectrum-empty {
+  position: relative;
+  z-index: 4;
+  width: min(520px, 86%);
+  border: 1px solid rgba(126, 231, 255, 0.2);
+  padding: 16px;
+  text-align: center;
+  color: #dceaff;
+  background: rgba(4, 9, 22, 0.78);
+  box-shadow: 0 18px 45px rgba(0, 0, 0, 0.28);
+}
+
+.spectrum-empty strong,
+.spectrum-empty span {
+  display: block;
+}
+
+.spectrum-empty strong {
+  margin-bottom: 6px;
+  color: #ffffff;
+}
+
+.spectrum-empty span {
+  color: var(--text-soft);
+  font-size: 0.86rem;
+  line-height: 1.45;
+}
+
+.technical-empty {
+  border: 1px solid rgba(255, 209, 102, 0.22);
+  padding: 16px;
+  background: rgba(82, 54, 7, 0.16);
+}
