@@ -1,10 +1,10 @@
-/* Cámara suave, geometría uniforme y distribuciones corta/larga. */
+/* Cámara GPU híbrida, geometría uniforme y distribuciones corta/larga. */
 
 .periodic-viewport {
   position: relative;
   display: block;
   overflow: hidden;
-  contain: layout paint;
+  contain: strict;
 }
 
 .periodic-pan {
@@ -13,16 +13,17 @@
   top: 50%;
   width: max-content;
   height: max-content;
-  transform-origin: center;
+  transform: translate3d(-50%, -50%, 0);
+  transform-origin: center center;
+  backface-visibility: hidden;
   will-change: transform;
 }
 
 .periodic-grid {
   transform: none !important;
   transform-origin: initial;
-  will-change: auto;
-  transition: none;
   overflow: visible;
+  contain: layout style;
   image-rendering: auto;
   text-rendering: geometricPrecision;
   -webkit-font-smoothing: antialiased;
@@ -46,7 +47,12 @@
   min-height: var(--cell-size);
   aspect-ratio: 1 / 1;
   overflow: hidden;
-  backface-visibility: visible;
+  contain: layout paint style;
+  backface-visibility: hidden;
+}
+
+.camera-moving .element-cell {
+  transition: none;
 }
 
 .element-open-button {
@@ -163,26 +169,41 @@
   height: var(--cell-size);
   min-width: var(--cell-size);
   min-height: var(--cell-size);
-  padding: 5px 18px 5px 5px;
-  border: 1px dashed rgba(255, 255, 255, 0.44);
+  padding: 6px 18px 6px 6px;
+  border: 1px dashed rgba(255, 255, 255, 0.42);
   color: rgba(255, 255, 255, 0.94);
   text-align: center;
   pointer-events: none;
   overflow: hidden;
+  contain: layout paint;
 }
 
 .soft-cells .series-placeholder {
   border-radius: 10px;
 }
 
-.series-placeholder::after {
-  content: '↘';
+.series-placeholder::before {
+  content: '';
   position: absolute;
-  right: 6px;
+  right: 7px;
+  bottom: 7px;
+  width: 8px;
+  height: 8px;
+  border-right: 2px solid currentColor;
+  border-bottom: 2px solid currentColor;
+  opacity: 0.72;
+}
+
+.series-placeholder::after {
+  content: '';
+  position: absolute;
+  right: 5px;
   bottom: 5px;
-  color: rgba(255, 255, 255, 0.72);
-  font-size: 0.82rem;
-  font-weight: 900;
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: currentColor;
+  opacity: 0.72;
 }
 
 .series-placeholder strong,
@@ -219,24 +240,6 @@
   background: linear-gradient(180deg, rgba(154, 103, 122, 0.8), rgba(118, 77, 93, 0.86));
 }
 
-.series-guide {
-  z-index: 1;
-  align-self: start;
-  height: 4px;
-  margin-top: -4px;
-  border-radius: 999px;
-  pointer-events: none;
-  opacity: 0.78;
-}
-
-.lanthanide-guide {
-  background: linear-gradient(90deg, #b69bd0, rgba(182, 155, 208, 0.08));
-}
-
-.actinide-guide {
-  background: linear-gradient(90deg, #cf8fa7, rgba(207, 143, 167, 0.08));
-}
-
 .layout-icon {
   display: grid;
   place-items: center;
@@ -253,24 +256,26 @@
   width: 25px;
 }
 
+.layout-mode-button.busy .layout-icon {
+  animation: layout-pulse 720ms ease-in-out infinite alternate;
+}
+
+.view-tool-button:disabled {
+  cursor: progress;
+  opacity: 0.7;
+}
+
+@keyframes layout-pulse {
+  from { transform: scaleX(0.82); opacity: 0.62; }
+  to { transform: scaleX(1.08); opacity: 1; }
+}
+
 @media (prefers-reduced-motion: reduce) {
   .periodic-pan {
     will-change: auto;
   }
-}
 
-@media (max-width: 760px) {
-  .view-tools {
-    top: 10px;
-    right: 10px;
-    max-width: calc(100vw - 20px);
-    flex-wrap: wrap;
-    justify-content: flex-end;
-    gap: 5px;
-  }
-
-  .layout-icon {
-    width: 18px;
-    height: 15px;
+  .layout-mode-button.busy .layout-icon {
+    animation: none;
   }
 }
