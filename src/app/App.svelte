@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { tick } from 'svelte';
+  import { onMount, tick } from 'svelte';
   import CompareElements from '../components/CompareElements.svelte';
   import ElementModal from '../components/ElementModal.svelte';
   import PeriodicGrid from '../components/PeriodicGrid.svelte';
@@ -8,6 +8,8 @@
   import { loadSpectraDataset, hydrateElements } from '../lib/dataLoader';
 
   type TableMode = 'short' | 'long';
+  type ThemeMode = 'auto' | 'light' | 'dark';
+  type ResolvedTheme = 'light' | 'dark';
 
   let elements: ElementWithLines[] = [];
   let selectedSymbol = '';
@@ -20,6 +22,10 @@
   let zoomLevel = 'Vista general';
   let softCells = true;
   let tableMode: TableMode = 'short';
+  let themeMode: ThemeMode = 'auto';
+  let resolvedTheme: ResolvedTheme = 'dark';
+  let systemTheme: MediaQueryList | null = null;
+  let themeTimer = 0;
 
   $: comparedElements = comparedSymbols
     .map((symbol) => elements.find((element) => element.symbol === symbol))
@@ -69,25 +75,59 @@
     comparedSymbols = [];
   }
 
-  async function applyTableMode(nextMode: TableMode): Promise<void> {
-    tableMode = nextMode;
+  async function toggleTableMode(): Promise<void> {
+    const previousRects = gridView?.captureElementRects?.() ?? {};
+    tableMode = tableMode === 'short' ? 'long' : 'short';
     await tick();
-    gridView?.resetView();
+    await gridView?.fitToViewport?.(false);
+    await tick();
+    gridView?.animateLayoutFrom?.(previousRects);
   }
 
-  function toggleTableMode(): void {
-    const nextMode: TableMode = tableMode === 'short' ? 'long' : 'short';
-    const transitionDocument = document as Document & {
-      startViewTransition?: (callback: () => Promise<void>) => unknown;
-    };
+  function resolveAutomaticTheme(): ResolvedTheme {
+    const hour = new Date().getHours();
+    const nightByClock = hour >= 20 || hour < 7;
+    return systemTheme?.matches || nightByClock ? 'dark' : 'light';
+  }
 
-    if (transitionDocument.startViewTransition) {
-      transitionDocument.startViewTransition(() => applyTableMode(nextMode));
-      return;
+  function applyTheme(): void {
+    resolvedTheme = themeMode === 'auto' ? resolveAutomaticTheme() : themeMode;
+    document.documentElement.dataset.theme = resolvedTheme;
+    document.documentElement.dataset.themeMode = themeMode;
+  }
+
+  function cycleTheme(): void {
+    themeMode = themeMode === 'auto' ? 'light' : themeMode === 'light' ? 'dark' : 'auto';
+    try {
+      localStorage.setItem('tabla-elementos-theme', themeMode);
+    } catch (_) {
+      // La aplicación puede funcionar aunque el navegador bloquee almacenamiento local.
+    }
+    applyTheme();
+  }
+
+  onMount(() => {
+    try {
+      const savedTheme = localStorage.getItem('tabla-elementos-theme');
+      if (savedTheme === 'auto' || savedTheme === 'light' || savedTheme === 'dark') themeMode = savedTheme;
+    } catch (_) {
+      themeMode = 'auto';
     }
 
-    void applyTableMode(nextMode);
-  }
+    systemTheme = window.matchMedia('(prefers-color-scheme: dark)');
+    const refreshTheme = (): void => {
+      if (themeMode === 'auto') applyTheme();
+    };
+
+    systemTheme.addEventListener('change', refreshTheme);
+    themeTimer = window.setInterval(refreshTheme, 60_000);
+    applyTheme();
+
+    return () => {
+      systemTheme?.removeEventListener('change', refreshTheme);
+      window.clearInterval(themeTimer);
+    };
+  });
 
   init();
 </script>
@@ -96,7 +136,11 @@
   <title>Tabla elementos</title>
 </svelte:head>
 
-<main class:with-comparator={comparedElements.length > 0} class:soft-cells={softCells} class="app-shell">
+<main
+  class:with-comparator={comparedElements.length > 0}
+  class:soft-cells={softCells}
+  class={`app-shell theme-${resolvedTheme}`}
+>
   {#if loading}
     <section class="state-card">
       <h2>Cargando dataset local…</h2>
@@ -127,11 +171,13 @@
       {nistProblemCount}
       {softCells}
       {tableMode}
+      {themeMode}
       on:zoomin={() => gridView?.zoomIn()}
       on:zoomout={() => gridView?.zoomOut()}
       on:reset={() => gridView?.resetView()}
       on:corners={() => (softCells = !softCells)}
       on:layout={toggleTableMode}
+      on:theme={cycleTheme}
     />
 
     {#if comparedElements.length > 0}
