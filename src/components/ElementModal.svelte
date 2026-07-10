@@ -20,8 +20,16 @@
     compare: string;
   }>();
 
+  $: hasNistProblem = element
+    ? Boolean(
+        element.nist &&
+          ((element.nist.espectro.present && !element.nist.espectro.table_like) ||
+            (element.nist.niveles.present && !element.nist.niveles.table_like))
+      )
+    : false;
+
   $: if (element && element.symbol !== lastSymbol) {
-    activeTab = 'wavelengths';
+    activeTab = hasNistProblem && element.lines.length === 0 ? 'nist' : 'wavelengths';
     mode = 'emission';
     lastSymbol = element.symbol;
   }
@@ -61,13 +69,17 @@
       return 'No tabular: parece HTML';
     }
 
+    if (file.status === 'single_column_csv') {
+      return 'No tabular: una columna';
+    }
+
     return file.status;
   }
 </script>
 
 {#if element}
   <div class="modal-backdrop" role="presentation" on:click={closeOnBackdrop}>
-    <section class="element-modal" aria-modal="true" role="dialog" aria-label={`Ficha espectral de ${element.name_es}`}>
+    <section class="element-modal" aria-modal="true" role="dialog" aria-label={`Ficha de ${element.name_es}`}>
       <header class="modal-header">
         <div class="modal-identity">
           <div class="modal-symbol">
@@ -91,6 +103,16 @@
         </div>
       </header>
 
+      {#if hasNistProblem}
+        <aside class="spectral-warning">
+          <strong>Datos NIST no representables todavía</strong>
+          <span>
+            Los CSV existen, pero no son tablas científicas limpias: contienen HTML/JavaScript o una sola columna. La ficha
+            muestra el diagnóstico en la pestaña NIST y no dibuja líneas falsas.
+          </span>
+        </aside>
+      {/if}
+
       <nav class="modal-tabs" aria-label="Pestañas de la ficha">
         <button class:active={activeTab === 'wavelengths'} type="button" on:click={() => (activeTab = 'wavelengths')}>
           Longitudes de onda
@@ -99,7 +121,7 @@
           Niveles de energía
         </button>
         <button class:active={activeTab === 'nist'} type="button" on:click={() => (activeTab = 'nist')}>
-          NIST
+          NIST{hasNistProblem ? ' · revisar' : ''}
         </button>
         <button class:active={activeTab === 'element'} type="button" on:click={() => (activeTab = 'element')}>
           Elemento
@@ -130,14 +152,14 @@
             <div class="section-title-row compact">
               <div>
                 <p class="eyebrow">Datos importados</p>
-                <h2>Estado NIST provisional</h2>
+                <h2>Estado NIST</h2>
               </div>
               <span class="range-pill">{element.nist?.imported_line_count ?? 0} líneas importadas</span>
             </div>
 
             <p class="empty-copy">
-              Esta pestaña es provisional. Sirve para comprobar qué archivos CSV existen para el elemento y si el
-              generador los reconoce como tablas científicas limpias.
+              Esta pestaña comprueba si los CSV de este elemento son tablas científicas utilizables. Un archivo puede existir
+              y aun así no ser representable si se guardó la página HTML/JavaScript en lugar de la exportación tabular de NIST.
             </p>
 
             {#if element.nist}
@@ -191,38 +213,45 @@
               <span class="range-pill">{element.lines.length} líneas</span>
             </div>
 
-            <div class="technical-table modal-table">
-              <table>
-                <thead>
-                  <tr>
-                    <th>Línea</th>
-                    <th>Especie</th>
-                    <th>λ</th>
-                    <th>Región</th>
-                    <th>Intensidad</th>
-                    <th>Nivel inferior</th>
-                    <th>Nivel superior</th>
-                    <th>ΔE</th>
-                    <th>Transición</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {#each element.lines as line}
+            {#if element.lines.length}
+              <div class="technical-table modal-table">
+                <table>
+                  <thead>
                     <tr>
-                      <td>{line.label}</td>
-                      <td>{line.species}</td>
-                      <td>{formatNm(line.wavelength_nm)}</td>
-                      <td>{wavelengthRegion(line.wavelength_nm)}</td>
-                      <td>{line.intensity.toFixed(2)}</td>
-                      <td>{formatEv(line.lower_level_ev)}</td>
-                      <td>{formatEv(line.upper_level_ev)}</td>
-                      <td>{formatEv(energyJump(line))}</td>
-                      <td>{line.transition}</td>
+                      <th>Línea</th>
+                      <th>Especie</th>
+                      <th>λ</th>
+                      <th>Región</th>
+                      <th>Intensidad</th>
+                      <th>Nivel inferior</th>
+                      <th>Nivel superior</th>
+                      <th>ΔE</th>
+                      <th>Transición</th>
                     </tr>
-                  {/each}
-                </tbody>
-              </table>
-            </div>
+                  </thead>
+                  <tbody>
+                    {#each element.lines as line}
+                      <tr>
+                        <td>{line.label}</td>
+                        <td>{line.species}</td>
+                        <td>{formatNm(line.wavelength_nm)}</td>
+                        <td>{wavelengthRegion(line.wavelength_nm)}</td>
+                        <td>{line.intensity.toFixed(2)}</td>
+                        <td>{formatEv(line.lower_level_ev)}</td>
+                        <td>{formatEv(line.upper_level_ev)}</td>
+                        <td>{formatEv(energyJump(line))}</td>
+                        <td>{line.transition}</td>
+                      </tr>
+                    {/each}
+                  </tbody>
+                </table>
+              </div>
+            {:else}
+              <p class="empty-copy technical-empty">
+                No hay líneas espectrales tabulares para mostrar. Revisa la pestaña NIST: los archivos existen, pero el
+                generador no puede convertirlos en longitudes de onda hasta que sean CSV científicos limpios.
+              </p>
+            {/if}
           </section>
         {/if}
       </div>
