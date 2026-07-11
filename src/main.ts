@@ -9,6 +9,7 @@ import './styles/interaction-refinement.css';
 import './styles/modal-data.css';
 import './styles/modal-refinement.css';
 import './styles/workspace-redesign.css';
+import './styles/ficha-density.css';
 import App from './app/App.svelte';
 
 const target = document.getElementById('app');
