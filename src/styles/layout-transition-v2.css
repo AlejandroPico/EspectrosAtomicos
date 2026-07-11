@@ -47,7 +47,7 @@
   margin: 0;
   transform-origin: 0 0;
   transition-property: transform, opacity;
-  transition-duration: var(--layout-duration, 0ms);
+  transition-duration: 720ms;
   transition-delay: var(--layout-delay, 0ms);
   transition-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
   backface-visibility: hidden;
@@ -68,7 +68,10 @@
 }
 
 .stage-series-in .element-slot,
-.stage-series-out .element-slot {
+.stage-series-out .element-slot,
+.stage-series-in .series-slot,
+.stage-series-out .series-slot {
+  transition-duration: 820ms;
   transition-timing-function: cubic-bezier(0.18, 0.82, 0.2, 1);
 }
 
