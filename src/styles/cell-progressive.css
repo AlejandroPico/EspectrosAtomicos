@@ -1,0 +1,241 @@
+/* Fichas progresivas: la vista general es mínima y la inspección revela el resumen científico. */
+.element-open-button.progressive-element-button {
+  position: relative;
+  display: block !important;
+  padding: 0 !important;
+  text-align: center;
+}
+
+.progressive-element-button .cell-topline {
+  position: absolute;
+  z-index: 4;
+  top: 7px;
+  left: 7px;
+  right: 7px;
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  pointer-events: none;
+}
+
+.progressive-element-button .atomic-number {
+  color: rgba(255, 255, 255, 0.82);
+  font-size: 0.65rem !important;
+  font-weight: 820;
+}
+
+.progressive-element-button .element-core {
+  position: absolute;
+  z-index: 3;
+  left: 50%;
+  top: 50%;
+  display: grid;
+  justify-items: center;
+  gap: 3px;
+  width: 58%;
+  transform: translate(-50%, -48%);
+  pointer-events: none;
+}
+
+.progressive-element-button .element-core strong {
+  font-size: 2rem !important;
+  line-height: 0.92;
+  letter-spacing: -0.06em;
+}
+
+.progressive-element-button .element-name {
+  position: static;
+  display: block;
+  width: 100%;
+  color: rgba(255, 255, 255, 0.82);
+  font-size: 0.63rem !important;
+  line-height: 1.05;
+  text-align: center;
+}
+
+.cell-science-grid {
+  position: absolute;
+  z-index: 2;
+  inset: 6px;
+  display: grid;
+  grid-template-columns: 1fr 1.2fr 1fr;
+  grid-template-rows: auto 1fr 1fr auto;
+  gap: 4px 7px;
+  pointer-events: none;
+}
+
+.cell-fact {
+  display: none;
+  min-width: 0;
+  align-self: start;
+  color: rgba(255, 255, 255, 0.94);
+  text-align: left;
+}
+
+.cell-fact small,
+.cell-fact b {
+  display: block;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.cell-fact small {
+  color: rgba(255, 255, 255, 0.57);
+  font-size: 0.43rem;
+  font-weight: 760;
+  letter-spacing: 0.035em;
+  line-height: 1.05;
+  text-transform: uppercase;
+}
+
+.cell-fact b {
+  margin-top: 1px;
+  font-size: 0.52rem;
+  line-height: 1.08;
+}
+
+.fact-mass { grid-column: 3; grid-row: 1; text-align: right; }
+.fact-ciaaw { grid-column: 2; grid-row: 1; text-align: center; }
+.fact-config { grid-column: 1 / -1; grid-row: 1; padding: 0 25%; text-align: center; }
+.fact-electronegativity { grid-column: 1; grid-row: 2; align-self: center; }
+.fact-radius { grid-column: 3; grid-row: 2; align-self: center; text-align: right; }
+.fact-ionization { grid-column: 1; grid-row: 3; align-self: center; }
+.fact-affinity { grid-column: 3; grid-row: 3; align-self: center; text-align: right; }
+.fact-state { grid-column: 1; grid-row: 4; align-self: end; }
+.fact-density { grid-column: 2; grid-row: 4; align-self: end; text-align: center; }
+.fact-thermal { grid-column: 3; grid-row: 4; align-self: end; text-align: right; }
+.fact-coordinates { grid-column: 2; grid-row: 3; align-self: end; text-align: center; }
+.fact-category { grid-column: 2; grid-row: 2; align-self: start; text-align: center; }
+
+.zoom-medium .cell-fact.level-medium,
+.zoom-deep .cell-fact.level-medium,
+.zoom-inspect .cell-fact.level-medium {
+  display: block;
+}
+
+.zoom-deep .cell-fact.level-deep,
+.zoom-inspect .cell-fact.level-deep {
+  display: block;
+}
+
+.zoom-inspect .cell-fact.level-inspect {
+  display: block;
+}
+
+.zoom-medium .progressive-element-button .element-core,
+.zoom-deep .progressive-element-button .element-core,
+.zoom-inspect .progressive-element-button .element-core {
+  width: 45%;
+}
+
+.zoom-medium .progressive-element-button .element-core strong,
+.zoom-deep .progressive-element-button .element-core strong,
+.zoom-inspect .progressive-element-button .element-core strong {
+  font-size: 1.75rem !important;
+}
+
+.zoom-deep .cell-science-grid {
+  inset: 7px;
+}
+
+.zoom-deep .cell-fact small {
+  font-size: 0.39rem;
+}
+
+.zoom-deep .cell-fact b {
+  font-size: 0.48rem;
+}
+
+.zoom-inspect .cell-science-grid {
+  inset: 8px;
+  gap: 6px 10px;
+}
+
+.zoom-inspect .progressive-element-button .element-core {
+  width: 38%;
+}
+
+.zoom-inspect .progressive-element-button .element-core strong {
+  font-size: 1.65rem !important;
+}
+
+.zoom-inspect .progressive-element-button .element-name {
+  font-size: 0.55rem !important;
+}
+
+.zoom-inspect .cell-fact small {
+  font-size: 0.35rem;
+}
+
+.zoom-inspect .cell-fact b {
+  font-size: 0.44rem;
+}
+
+.cell-data-state,
+.element-detail {
+  display: none !important;
+}
+
+.view-tools {
+  gap: 7px;
+}
+
+.view-tool-button .info-svg {
+  width: 20px;
+  height: 20px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.65;
+}
+
+.view-zoom-hud.zoom-reset-chip {
+  min-width: 132px;
+  height: 43px;
+  display: grid;
+  grid-template-columns: 1fr;
+  place-items: center;
+  padding: 0 13px;
+  border-radius: 0;
+  color: var(--app-ink);
+  cursor: pointer;
+}
+
+.view-zoom-hud.zoom-reset-chip:hover,
+.view-zoom-hud.zoom-reset-chip:focus-visible {
+  border-color: color-mix(in srgb, var(--accent) 62%, var(--line));
+  background: color-mix(in srgb, var(--accent) 9%, var(--panel-strong));
+  outline: none;
+}
+
+.view-zoom-hud.zoom-reset-chip strong,
+.view-zoom-hud.zoom-reset-chip span {
+  display: block;
+  max-width: 112px;
+  overflow: hidden;
+  text-align: center;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.view-zoom-hud.zoom-reset-chip strong {
+  font-size: 0.78rem;
+}
+
+.view-zoom-hud.zoom-reset-chip span {
+  color: var(--text-soft);
+  font-size: 0.61rem;
+}
+
+@media (max-width: 760px) {
+  .view-zoom-hud.zoom-reset-chip {
+    min-width: 82px;
+    height: 38px;
+    padding: 0 8px;
+  }
+
+  .view-zoom-hud.zoom-reset-chip span {
+    display: none;
+  }
+}
