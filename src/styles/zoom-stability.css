@@ -1,0 +1,47 @@
+/*
+ * Redibujado nítido sin alterar la geometría del lienzo.
+ * El escalón de render se aplica como escala visual interna; la cámara compensa
+ * con zoom/renderBucket y el centro del escenario permanece inmóvil.
+ */
+.absolute-periodic-grid {
+  --render-bucket-scale: 1;
+  transform: scale3d(
+    var(--render-bucket-scale),
+    var(--render-bucket-scale),
+    1
+  ) !important;
+  transform-origin: center center !important;
+}
+
+/* El movimiento 18/32 lo controla exclusivamente Web Animations. */
+.absolute-periodic-grid > .element-slot,
+.absolute-periodic-grid > .series-slot {
+  transition: none !important;
+}
+
+.absolute-periodic-grid > .element-slot {
+  contain: layout paint style;
+}
+
+/* Mostrar nuevos datos no modifica el tamaño ni la posición exterior. */
+.absolute-periodic-grid .element-cell,
+.absolute-periodic-grid .element-open-button,
+.absolute-periodic-grid .progressive-element-button {
+  box-sizing: border-box;
+  width: 100% !important;
+  height: 100% !important;
+}
+
+.absolute-periodic-grid .element-core,
+.absolute-periodic-grid .cell-science-grid,
+.absolute-periodic-grid .cell-fact {
+  transition: opacity 130ms ease, color 130ms ease !important;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .absolute-periodic-grid .element-core,
+  .absolute-periodic-grid .cell-science-grid,
+  .absolute-periodic-grid .cell-fact {
+    transition: none !important;
+  }
+}
