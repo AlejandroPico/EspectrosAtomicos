@@ -32,15 +32,9 @@
   }>();
 
   function themeLabel(): string {
-    if (themeMode === 'light') return 'Tema claro';
-    if (themeMode === 'dark') return 'Tema oscuro';
-    return `Tema automático · ahora ${resolvedTheme === 'dark' ? 'oscuro' : 'claro'}`;
-  }
-
-  function themeTooltip(): string {
-    if (themeMode === 'auto') return `${themeLabel()}. Siguiente: tema claro.`;
-    if (themeMode === 'light') return 'Tema claro. Siguiente: tema oscuro.';
-    return 'Tema oscuro. Siguiente: tema automático.';
+    if (themeMode === 'light') return 'Tema claro activo';
+    if (themeMode === 'dark') return 'Tema oscuro activo';
+    return `Tema automático activo · mostrando ${resolvedTheme === 'dark' ? 'oscuro' : 'claro'}`;
   }
 
   function handleFilterClick(): void {
@@ -76,30 +70,32 @@
     <span class="layout-icon" aria-hidden="true">{tableMode === 'short' ? '18' : '32'}</span>
   </button>
 
-  <button
-    class="view-tool-button theme-mode-button"
-    type="button"
-    data-tooltip={themeTooltip()}
-    aria-label={themeTooltip()}
-    on:click={() => dispatch('theme')}
-  >
-    {#if themeMode === 'light'}
-      <svg class="theme-svg" viewBox="0 0 24 24" aria-hidden="true">
-        <circle cx="12" cy="12" r="4.2"></circle>
-        <path d="M12 2.5v2.2M12 19.3v2.2M2.5 12h2.2M19.3 12h2.2M5.3 5.3l1.6 1.6M17.1 17.1l1.6 1.6M18.7 5.3l-1.6 1.6M6.9 17.1l-1.6 1.6"></path>
-      </svg>
-    {:else if themeMode === 'dark'}
-      <svg class="theme-svg" viewBox="0 0 24 24" aria-hidden="true">
-        <path d="M19.2 15.2A7.7 7.7 0 0 1 8.8 4.8 8.3 8.3 0 1 0 19.2 15.2Z"></path>
-      </svg>
-    {:else}
-      <svg class="theme-svg theme-auto" viewBox="0 0 24 24" aria-hidden="true">
-        <circle cx="12" cy="12" r="8.2"></circle>
-        <path class="theme-auto-fill" d="M12 3.8a8.2 8.2 0 0 0 0 16.4Z"></path>
-        <path d="M12 3.8v16.4"></path>
-      </svg>
-    {/if}
-  </button>
+  {#key `${themeMode}-${resolvedTheme}`}
+    <button
+      class="view-tool-button theme-mode-button"
+      type="button"
+      data-tooltip={themeLabel()}
+      aria-label={themeLabel()}
+      on:click={() => dispatch('theme')}
+    >
+      {#if themeMode === 'light'}
+        <svg class="theme-svg" viewBox="0 0 24 24" aria-hidden="true">
+          <circle cx="12" cy="12" r="4.2"></circle>
+          <path d="M12 2.5v2.2M12 19.3v2.2M2.5 12h2.2M19.3 12h2.2M5.3 5.3l1.6 1.6M17.1 17.1l1.6 1.6M18.7 5.3l-1.6 1.6M6.9 17.1l-1.6 1.6"></path>
+        </svg>
+      {:else if themeMode === 'dark'}
+        <svg class="theme-svg" viewBox="0 0 24 24" aria-hidden="true">
+          <path d="M19.2 15.2A7.7 7.7 0 0 1 8.8 4.8 8.3 8.3 0 1 0 19.2 15.2Z"></path>
+        </svg>
+      {:else}
+        <svg class="theme-svg theme-auto" viewBox="0 0 24 24" aria-hidden="true">
+          <circle cx="12" cy="12" r="8.2"></circle>
+          <path class="theme-auto-fill" d="M12 3.8a8.2 8.2 0 0 0 0 16.4Z"></path>
+          <path d="M12 3.8v16.4"></path>
+        </svg>
+      {/if}
+    </button>
+  {/key}
 
   <button
     class:active={filterOpen || activeFilterCount > 0}
