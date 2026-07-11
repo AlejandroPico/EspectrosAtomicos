@@ -13,6 +13,8 @@ import './styles/ficha-density.css';
 import './styles/cell-progressive.css';
 import './styles/periodic-info-guide.css';
 import './styles/filter-panel.css';
+import './styles/filter-panel-v2.css';
+import './styles/visual-consistency.css';
 import './lib/progressiveCellEnhancer';
 import App from './app/App.svelte';
 
