@@ -12,6 +12,7 @@ import './styles/workspace-redesign.css';
 import './styles/ficha-density.css';
 import './styles/cell-progressive.css';
 import './styles/periodic-info-guide.css';
+import './styles/filter-panel.css';
 import './lib/progressiveCellEnhancer';
 import App from './app/App.svelte';
 
