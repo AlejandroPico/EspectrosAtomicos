@@ -51,9 +51,8 @@
 
 <aside class="element-panel master-summary">
   {#if element}
-    <section class="summary-introduction">
-      <p class="eyebrow">Resumen científico</p>
-      <p class="summary-description">{element.summary}</p>
+    <section class="summary-introduction compact-summary-introduction">
+      <p><strong>Resumen científico</strong><span>—</span>{element.summary}</p>
     </section>
 
     {#if loadingData}
@@ -62,9 +61,9 @@
       </div>
     {:else}
       <section class="summary-sheet" aria-label={`Resumen de ${element.name_es}`}>
-        <header>
-          <div><p class="eyebrow">Ficha esencial</p><h3>Identidad, estructura y propiedades principales</h3></div>
-          <small>Datos consolidados desde los CSV locales</small>
+        <header class="inline-summary-header">
+          <div><strong>Ficha esencial</strong><span>—</span><small>Identidad, estructura y propiedades principales</small></div>
+          <i>Datos consolidados desde los CSV locales</i>
         </header>
         <dl class="summary-facts expanded-summary-facts">
           {#each summaryFacts as fact}
