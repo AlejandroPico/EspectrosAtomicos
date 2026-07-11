@@ -1,57 +1,105 @@
-/* Transición 18/32 V2: una capa independiente evita conflictos entre grid, zoom y cámara. */
-.layout-transition-overlay {
+/*
+ * Motor 18/32 V3.
+ * La posición pertenece al contenedor exterior; la ficha interior conserva hover,
+ * filtros y estados visuales sin competir por la propiedad transform.
+ */
+.absolute-periodic-grid {
+  position: relative !important;
+  display: block !important;
+  min-width: 0 !important;
+  min-height: 0 !important;
+  max-width: none !important;
+  max-height: none !important;
+  padding: 0 !important;
+  gap: 0 !important;
+  overflow: visible !important;
+  contain: layout style !important;
+}
+
+.layout-metric-probes {
   position: absolute;
-  inset: 0;
-  z-index: 34;
-  display: none;
-  overflow: hidden;
+  left: -10000px;
+  top: -10000px;
+  display: flex;
+  visibility: hidden;
   pointer-events: none;
-  contain: strict;
 }
 
-.layout-transition-overlay.active {
-  display: block;
+.layout-cell-probe {
+  width: var(--cell-size);
+  height: var(--cell-size);
+  flex: 0 0 auto;
 }
 
-.periodic-grid.layout-live-hidden > [data-layout-key] {
-  visibility: hidden !important;
+.layout-gap-probe {
+  width: var(--cell-gap);
+  height: 1px;
+  flex: 0 0 auto;
 }
 
-.layout-transition-ghost {
-  z-index: 1;
-  box-sizing: border-box;
-  transition: none !important;
-  animation: none !important;
-  contain: layout paint style;
+.element-slot,
+.series-slot {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: var(--cell-size);
+  height: var(--cell-size);
+  margin: 0;
+  transform-origin: 0 0;
+  transition-property: transform, opacity;
+  transition-duration: var(--layout-duration, 0ms);
+  transition-delay: var(--layout-delay, 0ms);
+  transition-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
   backface-visibility: hidden;
 }
 
-.layout-transition-ghost.element-cell {
+.element-slot {
+  z-index: 2;
+}
+
+.series-slot {
+  z-index: 3;
+}
+
+.layout-animating .element-slot,
+.layout-animating .series-slot {
+  will-change: transform, opacity;
+  pointer-events: none;
+}
+
+.stage-series-in .element-slot,
+.stage-series-out .element-slot {
+  transition-timing-function: cubic-bezier(0.18, 0.82, 0.2, 1);
+}
+
+.element-slot > .element-cell {
+  width: 100% !important;
+  height: 100% !important;
   min-width: 0 !important;
   min-height: 0 !important;
 }
 
-.layout-transition-ghost .element-open-button {
-  width: 100%;
-  height: 100%;
-}
-
-.layout-animating .layout-mode-button,
-.layout-animating ~ .view-tools .layout-mode-button {
-  pointer-events: none;
-}
-
-/* Las referencias del bloque f son fichas informativas, no conectores incompletos. */
+/* Fichas abreviadas del bloque f. */
 .series-placeholder {
-  pointer-events: auto !important;
+  position: relative !important;
+  width: 100% !important;
+  height: 100% !important;
+  min-width: 0 !important;
+  min-height: 0 !important;
+  display: grid !important;
+  grid-template-rows: 1fr auto auto 1fr;
+  place-items: center;
+  align-content: center;
+  padding: 7px !important;
   overflow: visible !important;
-  padding: 7px 5px !important;
   border-style: solid !important;
   border-radius: 0 !important;
+  color: var(--cell-primary-ink, currentColor);
   cursor: default;
   font: inherit;
   appearance: none;
   outline: none;
+  pointer-events: auto !important;
 }
 
 .series-placeholder::before,
@@ -61,34 +109,55 @@
   content: none !important;
 }
 
-.series-placeholder strong,
-.series-placeholder span,
-.series-placeholder small {
+.series-placeholder .series-range {
+  position: absolute;
+  top: 7px;
+  left: 7px;
   display: block;
-  width: 100%;
-  max-width: none !important;
+  width: auto !important;
+  max-width: calc(100% - 14px) !important;
+  margin: 0 !important;
   overflow: visible !important;
+  color: var(--cell-secondary-ink, currentColor);
+  font-size: clamp(0.43rem, 0.51vw, 0.61rem) !important;
+  font-weight: 840;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.025em;
+  line-height: 1;
+  text-align: left !important;
   text-overflow: clip !important;
   white-space: nowrap !important;
-  text-align: center;
 }
 
 .series-placeholder strong {
-  font-size: clamp(0.54rem, 0.68vw, 0.8rem) !important;
-  font-variant-numeric: tabular-nums;
-  letter-spacing: -0.035em;
-}
-
-.series-placeholder span {
-  margin-top: 2px !important;
-  font-size: clamp(0.43rem, 0.54vw, 0.63rem) !important;
-  font-weight: 760;
+  grid-row: 2;
+  display: block;
+  width: 100%;
+  max-width: none !important;
+  margin: 0 !important;
+  overflow: visible !important;
+  font-size: clamp(0.49rem, 0.59vw, 0.7rem) !important;
+  font-weight: 840;
+  line-height: 1.04;
+  text-align: center !important;
+  text-overflow: clip !important;
+  white-space: nowrap !important;
 }
 
 .series-placeholder small {
-  margin-top: 3px !important;
-  font-size: clamp(0.34rem, 0.43vw, 0.5rem) !important;
-  line-height: 1.05;
+  grid-row: 3;
+  display: block;
+  width: 100%;
+  max-width: none !important;
+  margin: 3px 0 0 !important;
+  overflow: visible !important;
+  color: var(--cell-secondary-ink, currentColor) !important;
+  font-size: clamp(0.4rem, 0.48vw, 0.57rem) !important;
+  font-weight: 720;
+  line-height: 1.04;
+  text-align: center !important;
+  text-overflow: clip !important;
+  white-space: nowrap !important;
 }
 
 .series-placeholder:hover,
@@ -102,14 +171,15 @@
     0 12px 30px rgba(0, 0, 0, 0.24) !important;
 }
 
-/* El hover sustituye las antiguas líneas tipo árbol. */
+/* El hover de la ficha-resumen identifica la serie sin conectores ambiguos. */
 .periodic-grid.series-focus-lanthanide .element-cell,
 .periodic-grid.series-focus-actinide .element-cell {
   transition:
     opacity 150ms ease,
     filter 150ms ease,
     box-shadow 150ms ease,
-    border-color 150ms ease;
+    border-color 150ms ease,
+    transform 120ms ease;
 }
 
 .periodic-grid .element-cell.series-unrelated {
@@ -139,8 +209,10 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
+  .element-slot,
+  .series-slot,
   .periodic-grid.series-focus-lanthanide .element-cell,
   .periodic-grid.series-focus-actinide .element-cell {
-    transition: none;
+    transition: none !important;
   }
 }
