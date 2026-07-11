@@ -1,0 +1,145 @@
+/* Transición 18/32 V2: una capa independiente evita conflictos entre grid, zoom y cámara. */
+.layout-transition-overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 34;
+  display: none;
+  overflow: hidden;
+  pointer-events: none;
+  contain: strict;
+}
+
+.layout-transition-overlay.active {
+  display: block;
+}
+
+.periodic-grid.layout-live-hidden > [data-layout-key] {
+  visibility: hidden !important;
+}
+
+.layout-transition-ghost {
+  z-index: 1;
+  box-sizing: border-box;
+  transition: none !important;
+  animation: none !important;
+  contain: layout paint style;
+  backface-visibility: hidden;
+}
+
+.layout-transition-ghost.element-cell {
+  min-width: 0 !important;
+  min-height: 0 !important;
+}
+
+.layout-transition-ghost .element-open-button {
+  width: 100%;
+  height: 100%;
+}
+
+.layout-animating .layout-mode-button,
+.layout-animating ~ .view-tools .layout-mode-button {
+  pointer-events: none;
+}
+
+/* Las referencias del bloque f son fichas informativas, no conectores incompletos. */
+.series-placeholder {
+  pointer-events: auto !important;
+  padding: 7px 5px !important;
+  border-style: solid !important;
+  border-radius: 0 !important;
+  cursor: default;
+  font: inherit;
+  appearance: none;
+  outline: none;
+}
+
+.series-placeholder::before,
+.series-placeholder::after,
+.series-placeholder .series-tree-mark {
+  display: none !important;
+  content: none !important;
+}
+
+.series-placeholder strong,
+.series-placeholder span,
+.series-placeholder small {
+  display: block;
+  width: 100%;
+  max-width: none !important;
+  overflow: visible !important;
+  text-overflow: clip !important;
+  white-space: nowrap !important;
+  text-align: center;
+}
+
+.series-placeholder strong {
+  font-size: clamp(0.54rem, 0.68vw, 0.8rem) !important;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.035em;
+}
+
+.series-placeholder span {
+  margin-top: 2px !important;
+  font-size: clamp(0.43rem, 0.54vw, 0.63rem) !important;
+  font-weight: 760;
+}
+
+.series-placeholder small {
+  margin-top: 3px !important;
+  font-size: clamp(0.34rem, 0.43vw, 0.5rem) !important;
+  line-height: 1.05;
+}
+
+.series-placeholder:hover,
+.series-placeholder:focus-visible {
+  z-index: 8;
+  border-color: color-mix(in srgb, currentColor 60%, transparent) !important;
+  filter: saturate(1.18) brightness(1.08);
+  box-shadow:
+    inset 0 0 0 1px color-mix(in srgb, currentColor 22%, transparent),
+    0 0 0 2px color-mix(in srgb, var(--accent) 24%, transparent),
+    0 12px 30px rgba(0, 0, 0, 0.24) !important;
+}
+
+/* El hover sustituye las antiguas líneas tipo árbol. */
+.periodic-grid.series-focus-lanthanide .element-cell,
+.periodic-grid.series-focus-actinide .element-cell {
+  transition:
+    opacity 150ms ease,
+    filter 150ms ease,
+    box-shadow 150ms ease,
+    border-color 150ms ease;
+}
+
+.periodic-grid .element-cell.series-unrelated {
+  opacity: 0.2;
+  filter: grayscale(0.68) saturate(0.28) brightness(0.72);
+}
+
+.periodic-grid .element-cell.series-related {
+  z-index: 7;
+  opacity: 1;
+  filter: saturate(1.3) brightness(1.13);
+  border-color: color-mix(in srgb, var(--accent) 72%, white) !important;
+  box-shadow:
+    inset 0 0 0 1px rgba(255, 255, 255, 0.22),
+    0 0 0 2px color-mix(in srgb, var(--accent) 28%, transparent),
+    0 13px 30px rgba(0, 0, 0, 0.28) !important;
+}
+
+:root[data-theme='light'] .periodic-grid .element-cell.series-unrelated {
+  opacity: 0.24;
+  filter: grayscale(0.66) saturate(0.3) brightness(0.96);
+}
+
+:root[data-theme='light'] .periodic-grid .element-cell.series-related {
+  filter: saturate(1.2) contrast(1.04);
+  border-color: color-mix(in srgb, var(--accent) 75%, #26313a) !important;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .periodic-grid.series-focus-lanthanide .element-cell,
+  .periodic-grid.series-focus-actinide .element-cell {
+    transition: none;
+  }
+}
