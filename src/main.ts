@@ -10,6 +10,9 @@ import './styles/modal-data.css';
 import './styles/modal-refinement.css';
 import './styles/workspace-redesign.css';
 import './styles/ficha-density.css';
+import './styles/cell-progressive.css';
+import './styles/periodic-info-guide.css';
+import './lib/progressiveCellEnhancer';
 import App from './app/App.svelte';
 
 const target = document.getElementById('app');
