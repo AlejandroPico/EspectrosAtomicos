@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { onMount, tick } from 'svelte';
+  import { onMount } from 'svelte';
   import CompareElements from '../components/CompareElements.svelte';
   import ElementModal from '../components/ElementModal.svelte';
   import PeriodicGrid from '../components/PeriodicGrid.svelte';
@@ -8,8 +8,6 @@
   import { loadSpectraDataset, hydrateElements } from '../lib/dataLoader';
 
   type TableMode = 'short' | 'long';
-  type TableLayout = 'short' | 'opening' | 'long';
-  type LayoutAnimationStage = 'spread' | 'series-in' | 'series-out' | 'collapse';
   type ThemeMode = 'auto' | 'light' | 'dark';
   type ResolvedTheme = 'light' | 'dark';
 
@@ -24,7 +22,6 @@
   let zoomPercent = 100;
   let zoomLevel = 'Vista general';
   let tableMode: TableMode = 'short';
-  let layoutMode: TableLayout = 'short';
   let layoutBusy = false;
   let themeMode: ThemeMode = 'auto';
   let resolvedTheme: ResolvedTheme = 'dark';
@@ -82,48 +79,21 @@
     comparisonScope = 'global';
   }
 
-  function pause(milliseconds: number): Promise<void> {
-    return new Promise((resolve) => window.setTimeout(resolve, milliseconds));
-  }
-
-  async function runLayoutStage(
-    nextLayout: TableLayout,
-    stage: LayoutAnimationStage,
-    settleDelay = 70
-  ): Promise<void> {
-    const previousRects = gridView?.captureElementRects?.() ?? {};
-    layoutMode = nextLayout;
-    await tick();
-    await Promise.resolve(gridView?.animateLayoutFrom?.(previousRects, stage));
-    if (settleDelay > 0) await pause(settleDelay);
-  }
-
-  async function recoverLayout(): Promise<void> {
-    layoutMode = tableMode;
-    await tick();
-    await Promise.resolve(gridView?.fitToViewport?.(false));
-  }
-
   async function toggleTableMode(): Promise<void> {
     if (layoutBusy) return;
+
+    const target: TableMode = tableMode === 'short' ? 'long' : 'short';
     layoutBusy = true;
 
     try {
-      if (tableMode === 'short') {
-        tableMode = 'long';
-        await runLayoutStage('opening', 'spread', 95);
-        await runLayoutStage('long', 'series-in', 70);
-      } else {
-        tableMode = 'short';
-        await runLayoutStage('opening', 'series-out', 95);
-        await runLayoutStage('short', 'collapse', 70);
-      }
+      await Promise.resolve(gridView?.transitionTo?.(target));
+      tableMode = target;
     } catch (error) {
-      console.warn('[TablaElementos] La transición animada falló; se aplicará el cambio inmediato.', error);
-      await recoverLayout();
+      console.warn('[TablaElementos] No se pudo completar la transición; se aplicará el modo final.', error);
+      tableMode = target;
+      await Promise.resolve(gridView?.fitToViewport?.(false, target));
     } finally {
-      layoutMode = tableMode;
-      window.setTimeout(() => (layoutBusy = false), 100);
+      window.setTimeout(() => (layoutBusy = false), 90);
     }
   }
 
@@ -177,7 +147,7 @@
       bind:this={gridView}
       {elements}
       {selectedSymbol}
-      {layoutMode}
+      layoutMode={tableMode}
       on:select={(event) => openElement(event.detail)}
       on:zoomchange={(event) => {
         zoomPercent = event.detail.percent;
