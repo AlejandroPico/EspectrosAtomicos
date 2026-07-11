@@ -1,10 +1,13 @@
 /*
- * Redibujado nítido sin alterar la geometría del lienzo.
- * El escalón de render se aplica como escala visual interna; la cámara compensa
- * con zoom/renderBucket y el centro del escenario permanece inmóvil.
+ * Zoom nítido sin alterar la geometría del lienzo.
+ *
+ * PeriodicGrid sigue publicando escalones de render mediante style.zoom para
+ * conservar su cálculo de cámara. Esta hoja impide que CSS zoom llegue a
+ * modificar el layout y aplica el escalón como una escala centrada.
  */
 .absolute-periodic-grid {
   --render-bucket-scale: 1;
+  zoom: 1 !important;
   transform: scale3d(
     var(--render-bucket-scale),
     var(--render-bucket-scale),
@@ -36,6 +39,25 @@
 .absolute-periodic-grid .cell-science-grid,
 .absolute-periodic-grid .cell-fact {
   transition: opacity 130ms ease, color 130ms ease !important;
+}
+
+/*
+ * El filtro casi neutro reproduce el repintado que el navegador efectúa al
+ * pasar el ratón por una ficha. Solo permanece durante dos fotogramas y no
+ * modifica perceptiblemente el color.
+ */
+.periodic-pan.zoom-raster-refresh {
+  will-change: auto;
+}
+
+.absolute-periodic-grid.zoom-raster-refresh .element-open-button,
+.absolute-periodic-grid.zoom-raster-refresh .series-placeholder {
+  filter: brightness(1.00001);
+}
+
+.absolute-periodic-grid.zoom-raster-refresh .element-cell {
+  outline: 1px solid rgba(255, 255, 255, 0.0001);
+  outline-offset: -1px;
 }
 
 @media (prefers-reduced-motion: reduce) {
