@@ -4,18 +4,29 @@ let attachedGrid: HTMLElement | null = null;
 
 function applyRenderBucket(grid: HTMLElement): void {
   const rawZoom = grid.style.zoom;
-  const parsed = Number.parseFloat(rawZoom || '1');
-  if (!Number.isFinite(parsed) || parsed <= 0) return;
+  const currentBucket = grid.style.getPropertyValue('--render-bucket-scale').trim();
 
-  const normalized = parsed.toFixed(3);
-  if (grid.style.getPropertyValue('--render-bucket-scale') !== normalized) {
-    grid.style.setProperty('--render-bucket-scale', normalized);
-    grid.dataset.renderBucket = normalized;
+  // Cuando PeriodicGrid publica un nuevo escalón, lo trasladamos a una escala
+  // visual interna y neutralizamos CSS zoom antes del siguiente pintado.
+  if (rawZoom && rawZoom !== '1') {
+    const parsed = Number.parseFloat(rawZoom);
+    if (!Number.isFinite(parsed) || parsed <= 0) return;
+
+    const normalized = parsed.toFixed(3);
+    if (currentBucket !== normalized) {
+      grid.style.setProperty('--render-bucket-scale', normalized);
+      grid.dataset.renderBucket = normalized;
+    }
+    grid.style.zoom = '1';
+    return;
   }
 
-  // CSS zoom modifica la geometría de layout y desplaza el centro del lienzo.
-  // Conservamos el escalón de rasterizado como una escala interna sin layout.
-  if (rawZoom && rawZoom !== '1') grid.style.zoom = '1';
+  // El valor 1 escrito por este mismo estabilizador no debe borrar el último
+  // escalón real. Solo inicializamos cuando todavía no existe ninguno.
+  if (!currentBucket) {
+    grid.style.setProperty('--render-bucket-scale', '1.000');
+    grid.dataset.renderBucket = '1.000';
+  }
 }
 
 function attachToGrid(grid: HTMLElement): void {
