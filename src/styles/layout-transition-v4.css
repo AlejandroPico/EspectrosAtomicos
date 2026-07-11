@@ -1,0 +1,53 @@
+/*
+ * Transición 18/32 V4.
+ * Durante el movimiento, Web Animations controla exclusivamente el transform
+ * de cada contenedor absoluto; se neutralizan las transiciones heredadas.
+ */
+.external-layout-animating {
+  cursor: progress !important;
+}
+
+.external-layout-animating .element-slot,
+.external-layout-animating .series-slot {
+  transition: none !important;
+  will-change: transform, opacity;
+}
+
+.external-layout-animating .element-cell,
+.external-layout-animating .series-placeholder {
+  pointer-events: none !important;
+}
+
+.absolute-periodic-grid.external-layout-long > .series-slot {
+  visibility: hidden !important;
+  opacity: 0 !important;
+  pointer-events: none !important;
+}
+
+/* La ficha-resumen opuesta participa también en la atenuación de la serie. */
+.absolute-periodic-grid.series-focus-lanthanide > .series-slot:nth-of-type(2),
+.absolute-periodic-grid.series-focus-actinide > .series-slot:nth-of-type(1) {
+  opacity: 0.2 !important;
+  filter: grayscale(0.68) saturate(0.28) brightness(0.72);
+}
+
+.absolute-periodic-grid.series-focus-lanthanide > .series-slot:nth-of-type(1),
+.absolute-periodic-grid.series-focus-actinide > .series-slot:nth-of-type(2) {
+  z-index: 8;
+  opacity: 1 !important;
+  filter: saturate(1.18) brightness(1.08);
+}
+
+:root[data-theme='light'] .absolute-periodic-grid.series-focus-lanthanide > .series-slot:nth-of-type(2),
+:root[data-theme='light'] .absolute-periodic-grid.series-focus-actinide > .series-slot:nth-of-type(1) {
+  opacity: 0.24 !important;
+  filter: grayscale(0.66) saturate(0.3) brightness(0.96);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .external-layout-animating .element-slot,
+  .external-layout-animating .series-slot {
+    animation: none !important;
+    transition: none !important;
+  }
+}
