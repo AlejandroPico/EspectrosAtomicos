@@ -1,3 +1,5 @@
+export {};
+
 interface LightweightElementRecord {
   symbol: string;
   group: number;
@@ -171,16 +173,16 @@ function scheduleDecoration(): void {
   });
 }
 
-function start(): void {
+function startProgressiveCellEnhancer(): void {
   scheduleDecoration();
   observer = new MutationObserver(scheduleDecoration);
   observer.observe(document.documentElement, { childList: true, subtree: true });
 }
 
 if (document.readyState === 'loading') {
-  document.addEventListener('DOMContentLoaded', start, { once: true });
+  document.addEventListener('DOMContentLoaded', startProgressiveCellEnhancer, { once: true });
 } else {
-  start();
+  startProgressiveCellEnhancer();
 }
 
 window.addEventListener('beforeunload', () => {
