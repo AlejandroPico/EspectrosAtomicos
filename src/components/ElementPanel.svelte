@@ -21,6 +21,14 @@
     return unit ? `${value} ${unit}` : value;
   }
 
+  function firstProperty(payload: ElementDataPayload | null, domainId: string, properties: string[]): string {
+    for (const property of properties) {
+      const value = propertyValue(payload, domainId, property);
+      if (value !== '—') return value;
+    }
+    return '—';
+  }
+
   function buildSummaryFacts(payload: ElementDataPayload | null): SummaryFact[] {
     if (!element) return [];
     return [
@@ -32,14 +40,21 @@
       { label: 'Masa atómica', value: propertyValue(payload, 'atomic', 'atomic_mass') },
       { label: 'Peso atómico CIAAW', value: propertyValue(payload, 'atomic', 'standard_atomic_weight') },
       { label: 'Configuración electrónica', value: propertyValue(payload, 'atomic', 'electron_configuration'), wide: true },
+      { label: 'Configuración de valencia', value: propertyValue(payload, 'atomic', 'valence_shell_configuration'), wide: true },
+      { label: 'Electrones de valencia', value: propertyValue(payload, 'atomic', 'valence_electron_count') },
+      { label: 'Valencias comunes', value: propertyValue(payload, 'atomic', 'common_valences') },
+      { label: 'Estados de oxidación', value: propertyValue(payload, 'chemical', 'oxidation_states') },
       { label: 'Electronegatividad', value: propertyValue(payload, 'atomic', 'electronegativity') },
-      { label: 'Radio atómico', value: propertyValue(payload, 'atomic', 'atomic_radius') },
-      { label: 'Primera ionización', value: propertyValue(payload, 'atomic', 'ionization_energy') },
+      { label: 'Radio de Van der Waals', value: firstProperty(payload, 'atomic', ['van_der_waals_radius', 'atomic_radius']) },
+      { label: 'Radio covalente', value: propertyValue(payload, 'atomic', 'covalent_radius') },
+      { label: 'Primera ionización', value: firstProperty(payload, 'atomic', ['ionization_energy_1', 'ionization_energy']) },
       { label: 'Afinidad electrónica', value: propertyValue(payload, 'atomic', 'electron_affinity') },
       { label: 'Estado estándar', value: propertyValue(payload, 'physical', 'standard_state') },
       { label: 'Densidad', value: propertyValue(payload, 'physical', 'density') },
       { label: 'Punto de fusión', value: propertyValue(payload, 'physical', 'melting_point') },
       { label: 'Punto de ebullición', value: propertyValue(payload, 'physical', 'boiling_point') },
+      { label: 'Estructura cristalina', value: propertyValue(payload, 'materials', 'crystal_structure') },
+      { label: 'Grupo espacial', value: propertyValue(payload, 'materials', 'space_group') },
       { label: 'Isótopos registrados', value: String(payload?.domains.isotopes?.row_count ?? 0) },
       { label: 'Líneas espectrales', value: String(element.lines.length) },
       { label: 'Niveles NIST', value: String(payload?.domains.nist_levels?.row_count ?? 0) }
