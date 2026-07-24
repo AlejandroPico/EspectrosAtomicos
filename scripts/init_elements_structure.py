@@ -7,64 +7,72 @@ ROOT = Path(__file__).resolve().parents[1]
 ELEMENTS_ROOT = ROOT / "data" / "elements"
 MANIFEST_PATH = ELEMENTS_ROOT / "elements.manifest.csv"
 
+PROPERTY_HEADER = "property,value,unit,source,source_url,retrieved_at,notes\n"
+
 CSV_TEMPLATES: dict[str, str] = {
-    "identity.csv": "field,value,unit,source,notes\n",
-    "spectra_nist_lines.csv": "wavelength_nm,intensity,species,transition,lower_level,upper_level,source,notes\n",
-    "spectra_nist_levels.csv": "level_id,energy,energy_unit,configuration,term,j,source,notes\n",
-    "atomic_properties.csv": "property,value,unit,source,notes\n",
-    "isotopes.csv": "isotope,mass_number,atomic_mass_u,abundance_percent,half_life,decay_mode,spin,source,notes\n",
-    "physical_properties.csv": "property,value,unit,phase,temperature_k,source,notes\n",
-    "chemical_properties.csv": "property,value,unit,source,notes\n",
-    "materials.csv": "property,value,unit,structure,temperature_k,source,notes\n",
-    "thermodynamics.csv": "property,value,unit,temperature_k,pressure,source,notes\n",
-    "geochemistry.csv": "property,value,unit,environment,source,notes\n",
-    "astrophysics.csv": "property,value,unit,context,source,notes\n",
-    "biology_medicine.csv": "property,value,unit,organism_or_use,source,notes\n",
-    "environment_safety.csv": "property,value,unit,classification,source,notes\n",
-    "industry_economy.csv": "property,value,unit,year,region,source,notes\n",
-    "history.csv": "field,value,year,source,notes\n",
-    "compounds.csv": "formula,name,compound_type,oxidation_state,source,notes\n",
-    "analytical_methods.csv": "method,signal,limit_of_detection,unit,source,notes\n",
-    "radiation_interaction.csv": "property,value,unit,energy,particle_or_photon,source,notes\n",
-    "photonics_color.csv": "property,value,wavelength_nm,color,source,notes\n",
-    "computational.csv": "property,value,unit,method,basis_or_model,source,notes\n",
-    "sources.csv": "dataset,source_name,url,download_date,license,notes\n",
+    "identity.csv": "atomic_number,symbol,name_en,name_es,group,period,block,category,folder,pubchem_name,standard_state,group_block,source,source_url,retrieved_at\n",
+    "spectra_nist_lines.csv": "wavelength_nm,intensity,species,transition,lower_level,upper_level,source,source_url,retrieved_at,notes\n",
+    "spectra_nist_levels.csv": "level_id,energy,energy_unit,configuration,term,j,source,source_url,retrieved_at,notes\n",
+    "atomic_properties.csv": PROPERTY_HEADER,
+    "isotopes.csv": "isotope,mass_number,atomic_mass_u,abundance_percent,half_life,decay_mode,spin,source,source_url,retrieved_at,notes\n",
+    "physical_properties.csv": PROPERTY_HEADER,
+    "chemical_properties.csv": PROPERTY_HEADER,
+    "materials.csv": "property,value,unit,source,source_url,retrieved_at,notes,material_id,phase,structure,space_group,lattice_a,lattice_b,lattice_c,lattice_alpha,lattice_beta,lattice_gamma\n",
+    "thermodynamics.csv": "property,value,unit,temperature_k,pressure_pa,phase,source,source_url,retrieved_at,notes\n",
+    "geochemistry.csv": "property,value,unit,environment,source,source_url,retrieved_at,notes\n",
+    "astrophysics.csv": "property,value,unit,context,source,source_url,retrieved_at,notes\n",
+    "biology_medicine.csv": "property,value,unit,organism_or_use,source,source_url,retrieved_at,notes\n",
+    "environment_safety.csv": "property,value,unit,classification,source,source_url,retrieved_at,notes\n",
+    "industry_economy.csv": "property,value,unit,year,region,source,source_url,retrieved_at,notes\n",
+    "history.csv": "property,value,unit,source,source_url,retrieved_at,notes\n",
+    "compounds.csv": "formula,name,compound_type,oxidation_state,source,source_url,retrieved_at,notes\n",
+    "analytical_methods.csv": "method,signal,limit_of_detection,unit,source,source_url,retrieved_at,notes\n",
+    "radiation_interaction.csv": "property,value,unit,energy,particle_or_photon,source,source_url,retrieved_at,notes\n",
+    "photonics_color.csv": "property,value,unit,wavelength_nm,color,source,source_url,retrieved_at,notes\n",
+    "computational.csv": "property,value,unit,method,basis_or_model,source,source_url,retrieved_at,notes\n",
+    "sources.csv": "provider,dataset,target_file,source_url,retrieved_at,status,sha256,notes\n",
 }
 
 README_TEMPLATE = """# {atomic_number} · {symbol} · {name_en} / {name_es}
 
-Carpeta de datos brutos y semiprocesados para el elemento **{name_es}** (`{symbol}`).
+Carpeta de datos brutos, normalizados y derivados para el elemento **{name_es}** (`{symbol}`).
 
-## Convención
+## Reglas obligatorias
 
-- Mantener aquí CSVs específicos de este elemento.
+- Mantener aquí todos los CSV específicos de este elemento.
 - Guardar datos descargados de fuentes oficiales con el menor procesado posible.
 - Añadir cada descarga o fuente a `sources.csv`.
+- Marcar explícitamente cualquier valor derivado, calculado, estimado o predicho.
+- Conservar condiciones: temperatura, presión, fase, isótopo, carga, coordinación y método cuando sean relevantes.
 - No borrar archivos originales si después se generan versiones normalizadas.
 
-## Archivos principales
+## Dominios principales
 
-- `identity.csv`
-- `spectra_nist_lines.csv`
-- `spectra_nist_levels.csv`
-- `atomic_properties.csv`
-- `isotopes.csv`
-- `physical_properties.csv`
-- `chemical_properties.csv`
-- `materials.csv`
-- `thermodynamics.csv`
-- `geochemistry.csv`
-- `astrophysics.csv`
-- `biology_medicine.csv`
-- `environment_safety.csv`
-- `industry_economy.csv`
-- `history.csv`
-- `compounds.csv`
-- `analytical_methods.csv`
-- `radiation_interaction.csv`
-- `photonics_color.csv`
-- `computational.csv`
-- `sources.csv`
+- `identity.csv`: identidad y posición periódica.
+- `atomic_properties.csv`: configuración, valencia, ionización, afinidad y radios diferenciados.
+- `chemical_properties.csv`: estados de oxidación y comportamiento químico.
+- `physical_properties.csv`: estado, densidad y cambios de fase.
+- `materials.csv`: alótropos, fases, estructuras, grupos espaciales y parámetros de red.
+- `isotopes.csv`: nucleídos y propiedades nucleares.
+- `spectra_nist_lines.csv` y `spectra_nist_levels.csv`: espectroscopia NIST.
+- Resto de CSV: termodinámica, contexto, radiación, biología, industria y fuentes.
+
+## Campos avanzados incorporados
+
+`atomic_properties.csv` puede contener, entre otros:
+
+- `electron_configuration_abbreviated`;
+- `valence_shell_configuration`;
+- `outer_shell_electron_count`;
+- `valence_electron_count`;
+- `common_valences`;
+- `ionization_energy_1`, `ionization_energy_2`, ...;
+- `van_der_waals_radius`;
+- `covalent_radius`;
+- `metallic_radius`;
+- `ionic_radius_<carga>_<coordinación>`.
+
+`materials.csv` conserva cada fase con `material_id`, `phase`, `structure`, `space_group` y parámetros de red.
 """
 
 
