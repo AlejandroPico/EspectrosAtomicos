@@ -41,6 +41,8 @@ jobs:
         run: npm run check
 
       - name: Generate datasets and build Vite application
+        env:
+          MP_API_KEY: ${{ secrets.MP_API_KEY }}
         run: npm run build
 
       - name: Configure Pages
