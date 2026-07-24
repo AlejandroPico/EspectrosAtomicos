@@ -31,6 +31,9 @@
     { id: 'global', label: 'Global' },
     { id: 'summary', label: 'Resumen' },
     { id: 'atom', label: 'Átomo' },
+    { id: 'electronic', label: 'Electrones' },
+    { id: 'radii', label: 'Radios' },
+    { id: 'crystal', label: 'Cristal' },
     { id: 'properties', label: 'Propiedades' },
     { id: 'isotopes', label: 'Isótopos' },
     { id: 'spectrum', label: 'Espectro' },
@@ -71,6 +74,14 @@
     const row = payload(element)?.domains[domainId]?.rows.find((item) => item.property === property);
     if (!row?.value) return '—';
     return `${row.value}${row.unit ? ` ${row.unit}` : ''}`;
+  }
+
+  function firstAvailable(element: ElementWithLines, domainId: string, properties: string[]): string {
+    for (const property of properties) {
+      const value = propertyValue(element, domainId, property);
+      if (value !== '—') return value;
+    }
+    return '—';
   }
 
   function domainCount(element: ElementWithLines, domainId: string): string {
@@ -115,13 +126,51 @@
       ];
     }
 
+    if (currentScope === 'electronic') {
+      return [
+        ...common.slice(0, 1),
+        { label: 'Configuración', value: (element) => propertyValue(element, 'atomic', 'electron_configuration') },
+        { label: 'Configuración de valencia', value: (element) => propertyValue(element, 'atomic', 'valence_shell_configuration') },
+        { label: 'Electrones exteriores', value: (element) => propertyValue(element, 'atomic', 'outer_shell_electron_count') },
+        { label: 'Electrones de valencia', value: (element) => propertyValue(element, 'atomic', 'valence_electron_count') },
+        { label: 'Valencias comunes', value: (element) => propertyValue(element, 'atomic', 'common_valences') },
+        { label: 'Estados de oxidación', value: (element) => propertyValue(element, 'chemical', 'oxidation_states') },
+        { label: 'Primera ionización', value: (element) => firstAvailable(element, 'atomic', ['ionization_energy_1', 'ionization_energy']) },
+        { label: 'Segunda ionización', value: (element) => propertyValue(element, 'atomic', 'ionization_energy_2') },
+        { label: 'Tercera ionización', value: (element) => propertyValue(element, 'atomic', 'ionization_energy_3') }
+      ];
+    }
+
+    if (currentScope === 'radii') {
+      return [
+        ...common.slice(0, 1),
+        { label: 'Van der Waals', value: (element) => firstAvailable(element, 'atomic', ['van_der_waals_radius', 'atomic_radius']) },
+        { label: 'Covalente', value: (element) => propertyValue(element, 'atomic', 'covalent_radius') },
+        { label: 'Metálico', value: (element) => propertyValue(element, 'atomic', 'metallic_radius') },
+        { label: 'Cristalino', value: (element) => propertyValue(element, 'atomic', 'crystal_radius') },
+        { label: 'Registros iónicos', value: (element) => String(payload(element)?.domains.atomic?.rows.filter((row) => row.property?.startsWith('ionic_radius_')).length ?? 0) }
+      ];
+    }
+
+    if (currentScope === 'crystal') {
+      return [
+        ...common.slice(0, 1),
+        { label: 'Estructura', value: (element) => propertyValue(element, 'materials', 'crystal_structure') },
+        { label: 'Grupo espacial', value: (element) => propertyValue(element, 'materials', 'space_group') },
+        { label: 'Parámetro a', value: (element) => propertyValue(element, 'materials', 'lattice_a') },
+        { label: 'Parámetro b', value: (element) => propertyValue(element, 'materials', 'lattice_b') },
+        { label: 'Parámetro c', value: (element) => propertyValue(element, 'materials', 'lattice_c') },
+        { label: 'Registros de materiales', value: (element) => domainCount(element, 'materials') }
+      ];
+    }
+
     const properties: MatrixRow[] = [
       { label: 'Masa atómica', value: (element) => propertyValue(element, 'atomic', 'atomic_mass') },
       { label: 'Peso CIAAW', value: (element) => propertyValue(element, 'atomic', 'standard_atomic_weight') },
       { label: 'Configuración electrónica', value: (element) => propertyValue(element, 'atomic', 'electron_configuration') },
       { label: 'Electronegatividad', value: (element) => propertyValue(element, 'atomic', 'electronegativity') },
-      { label: 'Radio atómico', value: (element) => propertyValue(element, 'atomic', 'atomic_radius') },
-      { label: 'Ionización', value: (element) => propertyValue(element, 'atomic', 'ionization_energy') },
+      { label: 'Radio Van der Waals', value: (element) => firstAvailable(element, 'atomic', ['van_der_waals_radius', 'atomic_radius']) },
+      { label: 'Ionización', value: (element) => firstAvailable(element, 'atomic', ['ionization_energy_1', 'ionization_energy']) },
       { label: 'Estado estándar', value: (element) => propertyValue(element, 'physical', 'standard_state') },
       { label: 'Densidad', value: (element) => propertyValue(element, 'physical', 'density') },
       { label: 'Fusión', value: (element) => propertyValue(element, 'physical', 'melting_point') },
